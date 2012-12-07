@@ -1,12 +1,12 @@
 /**
  * 引用类型对象
  */
-function Reference(base, name, strict) {
+function ES_Reference(base, name, strict) {
     this.baseValue = base; //undefined, Object, Boolean, Number, environmentRecord
     this.referenceName = name;
     this.strictReference = strict;
 }
-Reference.prototype = {
+ES_Reference.prototype = {
     getBase : function () {
         return this.baseValue;
     },
@@ -27,7 +27,7 @@ Reference.prototype = {
     }
 };
 
-Reference.getValue = function (ref) {
+ES_Reference.getValue = function (ref) {
     if (Type(ref) !== Reference) {
         return ref;
     }
@@ -52,7 +52,7 @@ Reference.getValue = function (ref) {
     return base.getBindingValue(ref.getReferencedName(), ref.isStrictReference());
 };
 
-Reference.putValue = function (ref, W) {
+ES_Reference.putValue = function (ref, W) {
     if (Type(ref) !== Reference) {
         throw new ReferenceError();
     }

@@ -1,24 +1,24 @@
 /**
  * 属性描述符
  */
-function PropertyDescriptor(o) {
+function ES_PropertyDescriptor(o) {
     // //命名的数据属性
-    // this.[[Value]] = undefined;
-    // this.[[Writable]] = false;
+    // this.__Value__ = undefined;
+    // this.__Writable__ = false;
 
     // //命名的访问器属性
-    // this.[[Get]] = undefined;
-    // this.[[Set]] = undefined;
+    // this.__Get__ = undefined;
+    // this.__Set__ = undefined;
 
-    // this.[[Enumerable]] = false;
-    // this.[[Configurable]] = false;
+    // this.__Enumerable__ = false;
+    // this.__Configurable__ = false;
 }
 
 PropertyDescriptor.isAccessorDescriptor = function (desc) {
     if ('undefined' === typeof desc) {
         return false;
     }
-    if ('undefined' === typeof desc.[[Get]] || 'undefined' === typeof desc.[[Set]]) {
+    if ('undefined' === typeof desc.__Get__ || 'undefined' === typeof desc.__Set__) {
         return false;
     }
     return true;
@@ -28,7 +28,7 @@ PropertyDescriptor.isDataDescriptor = function (desc) {
     if ('undefined' === typeof desc) {
         return false;
     }
-    if ('undefined' === typeof desc.[[Value]] || 'undefined' === typeof desc.[[Writable]]) {
+    if ('undefined' === typeof desc.__Value__ || 'undefined' === typeof desc.__Writable__) {
         return false;
     }
     return true;

@@ -1,9 +1,13 @@
+/**
+ * ES定义的对象类型
+ * @param {Object} o 初始化参数
+ */
 function ES_Object(o) {
     /**
      * ES_Object是一个属性的集合，属性(property)的表述如下：
      * this._ownProperty[propertyName] = new ES_PropertyIdentifier(o);
      */
-    this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述
+    this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述, 如果使用this[propertyName]，由于js的查找变量特点，会找到链中所有的属性而不是自身属性
     
     //内部属性
     this.__Prototype__ = o.__Prototype__ || null; //此对象原型，为ES_Object || null

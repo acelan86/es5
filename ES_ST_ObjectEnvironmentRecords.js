@@ -1,5 +1,7 @@
 /**
  * 对象式环境数据对象
+ * 程序 with语句
+ * 将一系列标识符与其绑定的对象属性名建立一一对应关系
  * @param {[type]} o 指定对象
  */
 function ES_ST_ObjectEnvironmentRecords(o, isProvideThis) {
@@ -18,19 +20,19 @@ ES_ST_ObjectEnvironmentRecords.prototype = {
     /**
      * 在环境记录项中创建一个新的未初始化的可变绑定
      * @param  {String} name      绑定标识符
-     * @param  {Bollean} canDelete 是否可以被删除
+     * @param  {Boolean} canDelete 是否可以被删除
      */
     createMutableBinding : function (name, canDelete) {
         var bindings = this.bindingObject;
         if (!bindings.__HasProperty__(name)) {
             bindings.__DefineOwnProperty__(
                 name,
-                {
+                new ES_ST_PropertyDescriptor({
                     __Value__       : undefined,
                     __Writable__    : true,
                     __Enumerable__  : true,
                     __Configurable__: canDelete
-                },
+                }),
                 true
             );
         }

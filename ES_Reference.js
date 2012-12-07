@@ -40,7 +40,7 @@ ES_Reference.getValue = function (ref) {
     if (ref.isPropertyReference()) {
         var get = null;
         if (!ref.hasPrimitiveBase()) {
-            get = base.[[Get]];
+            get = base.__Get__;
         } else {
             var o = ToObject(base);
             //todo 未详细
@@ -61,11 +61,11 @@ ES_Reference.putValue = function (ref, W) {
         if (ref.isStrictReference()) {
             throw new ReferenceError();
         }
-        globalObj.[[Put]](ref.getReferencedName(), W, false);
+        globalObj.__Put__(ref.getReferencedName(), W, false);
     } else if (ref.isPropertyReference()) {
         var put = null;
         if (!ref.hasPrimitiveBase()) {
-            put = base.[[Put]];
+            put = base.__Put__;
         } else {
             var o = ToObject(base);
             put = .....

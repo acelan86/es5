@@ -5,7 +5,7 @@
 function ES_LT_Object(o) {
     /**
      * ES_LT_Object是一个属性的集合，属性(property)的表述如下：
-     * this._ownProperty[propertyName] = new ES_ST_PropertyIdentifier(o);
+     * this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(o);
      */
     this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述, 如果使用this[propertyName]，由于js的查找变量特点，会找到链中所有的属性而不是自身属性
     

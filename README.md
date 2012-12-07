@@ -11,5 +11,5 @@ ES5.1
 类型：
 ==
 1. ES_LT_XXX 语言类型 (包括Undefined, Null, Boolean, String, Number, Object)
-2. ES_ST_XXX 规范类型 (包括Refrence, List, End, PropertyDescriptor, PropertyIdentifier, LexicalEnvironment, EnvironmentRecords)
+2. ES_ST_XXX 规范类型 (包括Refrence, List, Completion, PropertyDescriptor, PropertyIdentifier, LexicalEnvironment, EnvironmentRecords)
 

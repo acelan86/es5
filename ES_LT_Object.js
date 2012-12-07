@@ -1,21 +1,21 @@
 /**
- * ES定义的对象类型
+ * 对象类型 （语言类型 language types）
  * @param {Object} o 初始化参数
  */
-function ES_Object(o) {
+function ES_LT_Object(o) {
     /**
-     * ES_Object是一个属性的集合，属性(property)的表述如下：
-     * this._ownProperty[propertyName] = new ES_PropertyIdentifier(o);
+     * ES_LT_Object是一个属性的集合，属性(property)的表述如下：
+     * this._ownProperty[propertyName] = new ES_ST_PropertyIdentifier(o);
      */
     this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述, 如果使用this[propertyName]，由于js的查找变量特点，会找到链中所有的属性而不是自身属性
     
     //内部属性
-    this.__Prototype__ = o.__Prototype__ || null; //此对象原型，为ES_Object || null
+    this.__Prototype__ = o.__Prototype__ || null; //此对象原型，为ES_LT_Object || null
     this.__Class__ = o.__Class__; //此对象分类的一个字符串，原生对象占用"Arguments", "Array", "Boolean", "Date", "Error", "Function", "JSON", "Math", "Number", "Object", "RegExp", "String"，宿主对象可以为除这些值之外的任何字符串
     this.__Extensible__ = o.__Extensible__ || false; //是否可以向对象添加自身属性（ownProperty）
 }
 
-ES_Object.prototype = {
+ES_LT_Object.prototype = {
     /**
      * 返回命名属性的值
      * @param  {String} propertyName 属性名
@@ -107,7 +107,7 @@ ES_Object.prototype = {
             var setter = desc.__Set__;
             setter.__Call__.call(this, value);
         } else {
-            var newDesc = new ES_PropertyDescriptor({
+            var newDesc = new ES_ST_PropertyDescriptor({
                 __Value__           : value,
                 __Writable__        : true,
                 __Enumerable__      : true,
@@ -209,7 +209,7 @@ ES_Object.prototype = {
     /**
      * 创建或修改自身命名属性为属性描述的状态
      * @param  {String}                 propertyName       属性名
-     * @param  {ES_PropertyDescriptor}  propertyDescriptor 属性描述符
+     * @param  {ES_ST_PropertyDescriptor}  propertyDescriptor 属性描述符
      * @param  {Boolean}                isThrow            是否抛出错误
      * @return {Boolean}                                   是否成功 
      */
@@ -227,15 +227,15 @@ ES_Object.prototype = {
             _denied();
         }
         if (current === undefined && extensible === true) {
-            if (ES_PropertyIdentifier.isGenericDescriptor(propertyDescriptor) || ES_PropertyIdentifier.isDataDescriptor(propertyDescriptor)) {
-                this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+            if (ES_PropertyIdentifier.isGenericDescriptor(propertyDescriptor) || ES_ST_PropertyIdentifier.isDataDescriptor(propertyDescriptor)) {
+                this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
                     __Value__           : propertyDescriptor.__Value__,
                     __Writable__        : propertyDescriptor.__Writable__,
                     __Enumerable__      : propertyDescriptor.__Enumerable__,
                     __Configurable__    : propertyDescriptor.__Configurable__
                 });
             } else {
-                this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
                     __Get__             : propertyDescriptor.__Get__,
                     __Set__             : propertyDescriptor.__Set__,
                     __Enumerable__      : propertyDescriptor.__Enumerable__,
@@ -257,33 +257,33 @@ ES_Object.prototype = {
                 _denied();
             }
         }
-        if (!ES_PropertyDescriptor.isGenericDescriptor(propertyDescriptor)) {
-            if (ES_PropertyDescriptor.isDataDescriptor(current) !== ES_PropertyDescriptor.isDataDescriptor(propertyDescriptor)) {
+        if (!ES_ST_PropertyDescriptor.isGenericDescriptor(propertyDescriptor)) {
+            if (ES_ST_PropertyDescriptor.isDataDescriptor(current) !== ES_ST_PropertyDescriptor.isDataDescriptor(propertyDescriptor)) {
                 if (current.__Configurable__ === false) {
                     _denied();
                 }
-                if (ES_PropertyDescriptor.isDataDescriptor(current)) {
-                    this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                if (ES_ST_PropertyDescriptor.isDataDescriptor(current)) {
+                    this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
                         __Get__             : undefined,
                         __Set__             : undefined,
                         __Enumerable__      : current.__Enumerable__,
                         __Configurable__    : current.__Configurable__
                     });
                 } else {
-                    this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                    this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
                         __Value__           : undefined,
                         __Writable__        : false,
                         __Enumerable__      : current.__Enumerable__,
                         __Configurable__    : current.__Configurable__
                     });
                 }
-            } else if (ES_PropertyDescriptor.isDataDescriptor(current) === true && ES_PropertyDescriptor.isDataDescriptor(propertyDescriptor) === true) {
+            } else if (ES_ST_PropertyDescriptor.isDataDescriptor(current) === true && ES_ST_PropertyDescriptor.isDataDescriptor(propertyDescriptor) === true) {
                 if (current.__Configurable__ === false) {
                     if (current.__Writable__ === false && propertyDescriptor.__Writable__ === true) {
                         _denied();
                     }
                     if (current.__Writable__ === false) {
-                        if ('undefined' !== typeof propertyDescriptor.__Value__ && !ES_Global.sameValue(propertyDescriptor.__Value__, current.__Value__)) {
+                        if ('undefined' !== typeof propertyDescriptor.__Value__ && !ES_ST_Global.sameValue(propertyDescriptor.__Value__, current.__Value__)) {
                             _denied();
                         }
                     }
@@ -292,7 +292,7 @@ ES_Object.prototype = {
                 //     //current.__Configurable__ === true, 可接受任何更改,更改在最后面
                 // }
             } else {
-                //ES_PropertyDescriptor.isAccessorDescriptor(current) === true && ES_PropertyDescriptor.isAccessorDescriptor(propertyDescriptor) === true;
+                //ES_ST_PropertyDescriptor.isAccessorDescriptor(current) === true && ES_ST_PropertyDescriptor.isAccessorDescriptor(propertyDescriptor) === true;
                 if (current.__Configurable__ === false) {
                     if ('undefined' !== typeof propertyDescriptor.__Set__ && !ES_Global.sameValue(propertyDescriptor.__Set__, current.__Set__)) {
                         _denied();
@@ -303,7 +303,7 @@ ES_Object.prototype = {
                 }
             }
             //propertyDescriptor有所有特性字段
-            this._ownProperty[propertyName] = new ES_PropertyDescriptor(propertyDescriptor);
+            this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(propertyDescriptor);
             return true;
         }
     }

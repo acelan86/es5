@@ -1,7 +1,7 @@
 /**
- * 属性描述符
+ * 属性描述符（规范类型）
  */
-function ES_PropertyDescriptor(o) {
+function ES_ST_PropertyDescriptor(o) {
     //命名的数据属性（可选）
     this.__Value__ = o.__Value__ || undefined,
     this.__Writable__ = o.__Writable__ || false, //若为false, 试图通过__Put__方法去访问__Value__都会失效
@@ -17,10 +17,10 @@ function ES_PropertyDescriptor(o) {
 
 /**
  * 判断是否为访问器属性
- * @param  {ES_PropertyDescriptor}  desc 属性描述符
+ * @param  {ES_ST_PropertyDescriptor}  desc 属性描述符
  * @return {Boolean}                     是否时访问器属性
  */
-ES_PropertyDescriptor.isAccessorDescriptor = function (desc) {
+ES_ST_PropertyDescriptor.isAccessorDescriptor = function (desc) {
     if ('undefined' === typeof desc) {
         return false;
     }
@@ -32,10 +32,10 @@ ES_PropertyDescriptor.isAccessorDescriptor = function (desc) {
 
 /**
  * 判断是否为数据属性
- * @param  {ES_PropertyDescriptor}  desc 属性描述符
+ * @param  {ES_ST_PropertyDescriptor}  desc 属性描述符
  * @return {Boolean}                     是否为数据属性
  */
-ES_PropertyDescriptor.isDataDescriptor = function (desc) {
+ES_ST_PropertyDescriptor.isDataDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
@@ -47,10 +47,10 @@ ES_PropertyDescriptor.isDataDescriptor = function (desc) {
 
 /**
  * 判断是否为普通属性
- * @param  {ES_PropertyDescriptor}  desc 属性描述符
+ * @param  {ES_ST_PropertyDescriptor}  desc 属性描述符
  * @return {Boolean}                     是否为普通属性
  */
-ES_PropertyDescriptor.isGenericDescriptor = function (desc) {
+ES_ST_PropertyDescriptor.isGenericDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
@@ -61,15 +61,15 @@ ES_PropertyDescriptor.isGenericDescriptor = function (desc) {
 };
 
 
-ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
+ES_ST_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
-    var obj = new ES_Object();
-    if (ES_PropertyDescriptor.isDataDescriptor(desc)) {
+    var obj = new ES_LT_Object();
+    if (ES_ST_PropertyDescriptor.isDataDescriptor(desc)) {
         obj.__DefineOwnProperty__(
             "value",
-            new ES_PropertyDescriptor({
+            new ES_ST_PropertyDescriptor({
                 __Value__       : desc.__Value__,
                 __Writable__    : true,
                 __Enumerable__  : true,
@@ -80,7 +80,7 @@ ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
 
         obj.__DefineOwnProperty__(
             "writable",
-            new ES_PropertyDescriptor({
+            new ES_ST_PropertyDescriptor({
                 __Value__       : desc.__Writable__,
                 __Writable__    : true,
                 __Enumerable__  : true,
@@ -89,10 +89,10 @@ ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
             false
         );
     } else {
-        //ES_PropertyDescriptor.isAccessorDescriptor(desc) === true
+        //ES_ST_PropertyDescriptor.isAccessorDescriptor(desc) === true
         obj.__DefineOwnProperty__(
             "get",
-            new ES_PropertyDescriptor({
+            new ES_ST_PropertyDescriptor({
                 __Value__       : desc.__Get__,
                 __Writable__    : true,
                 __Enumerable__  : true,
@@ -102,7 +102,7 @@ ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
         );
         obj.__DefineOwnProperty__(
             "set",
-            new ES_PropertyDescriptor({
+            new ES_ST_PropertyDescriptor({
                 __Value__       : desc.__Set__,
                 __Writable__    : true,
                 __Enumerable__  : true,
@@ -114,7 +114,7 @@ ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
 
     obj.__DefineOwnProperty__(
         "enumerable",
-        new ES_PropertyDescriptor({
+        new ES_ST_PropertyDescriptor({
             __Value__       : desc.__Enumerable__,
             __Writable__    : true,
             __Enumerable__  : true,
@@ -124,7 +124,7 @@ ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
     );
     obj.__DefineOwnProperty__(
         "configurable",
-        new ES_PropertyDescriptor({
+        new ES_ST_PropertyDescriptor({
             __Value__       : desc.__Configuable__,
             __Writable__    : true,
             __Enumerable__  : true,
@@ -135,11 +135,11 @@ ES_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
     return obj;
 };
 
-ES_PropertyDescriptor.toPropertyDescriptor = function (obj) {
-    if (ES_Global.type(obj) !== ES_Object) {
+ES_ST_PropertyDescriptor.toPropertyDescriptor = function (obj) {
+    if (ES_Global.type(obj) !== ES_LT_Object) {
         throw new TypeError();
     }
-    var desc = new ES_PropertyDescriptor({});
+    var desc = new ES_ST_PropertyDescriptor({});
     if (obj.__hasProperty__('enumerable') === true) {
         var enum = obj.__Get__('enumerable');
         desc.__Enumerable__ = ES_Global.toBoolean(enum);
@@ -183,10 +183,10 @@ ES_PropertyDescriptor.toPropertyDescriptor = function (obj) {
 /**
  * 属性标识符类型
  * @param {String}                name       属性名
- * @param {ES_PropertyDescriptor} descriptor 属性描述符
- * 这个东西或许不存在，他只是在ES_Object里面的name : ES_PropertyDescriptor对；见ES_Object
+ * @param {ES_ST_PropertyDescriptor} descriptor 属性描述符
+ * 这个东西或许不存在，他只是在ES_LT_Object里面的name : ES_ST_PropertyDescriptor对；见ES_LT_Object
  */
-function ES_PropertyIdentifier(name, descriptor) {
+function ES_ST_PropertyIdentifier(name, descriptor) {
     this.name = name;
     this.descriptor = descriptor;
 }

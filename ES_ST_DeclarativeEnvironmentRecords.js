@@ -1,10 +1,10 @@
 /**
  * 声明式环境数据对象
  */
-function ES_DeclarativeEnvironmentRecords() {
+function ES_ST_DeclarativeEnvironmentRecords() {
     this.bindingObject = {};
 }
-ES_DeclarativeEnvironmentRecords.prototype = {
+ES_ST_DeclarativeEnvironmentRecords.prototype = {
     /**
      * 判断环境记录项中是否包含对某个标识符的绑定。
      * @param  {[type]}  name 标识符

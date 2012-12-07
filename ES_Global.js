@@ -36,6 +36,9 @@ var ES_Global = {
 	/**
 	 * 测试操作集合
 	 */
+	type : function (any) {
+
+	},
 	checkObjectCoercible : function (any) {
 
 	},

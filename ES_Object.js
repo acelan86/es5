@@ -187,14 +187,14 @@ ES_Object.prototype = {
     __DefaultValue__ : function (hint) {
         //当hint为String时
         var toString = this.__Get__('toString');
-        if (isCallable(toString)) {
+        if (ES_Global.isCallable(toString)) {
             var str = toString.__Call__.call(this);
             if (isPrimitive(str)) {
                 return str;
             }
         }
         var valueOf = this.__Get__('valueOf');
-        if (isCallable(valueOf)) {
+        if (ES_Global.isCallable(valueOf)) {
             var val = valueOf.__Call__.call(this);
             if (isPrimitive(val)) {
                 return val;
@@ -246,7 +246,7 @@ ES_Object.prototype = {
         if (propertyDescriptor 不存在任何字段) {
             return true;
         }
-        if (sameValue(propertyDescriptor, current)) {
+        if (ES_Global.sameValue(propertyDescriptor, current)) {
             return true;
         }
         if (current.__Configurable__ === false) {
@@ -283,7 +283,7 @@ ES_Object.prototype = {
                         _denied();
                     }
                     if (current.__Writable__ === false) {
-                        if ('undefined' !== typeof propertyDescriptor.__Value__ && !sameValue(propertyDescriptor.__Value__, current.__Value__)) {
+                        if ('undefined' !== typeof propertyDescriptor.__Value__ && !ES_Global.sameValue(propertyDescriptor.__Value__, current.__Value__)) {
                             _denied();
                         }
                     }
@@ -294,10 +294,10 @@ ES_Object.prototype = {
             } else {
                 //ES_PropertyDescriptor.isAccessorDescriptor(current) === true && ES_PropertyDescriptor.isAccessorDescriptor(propertyDescriptor) === true;
                 if (current.__Configurable__ === false) {
-                    if ('undefined' !== typeof propertyDescriptor.__Set__ && !sameValue(propertyDescriptor.__Set__, current.__Set__)) {
+                    if ('undefined' !== typeof propertyDescriptor.__Set__ && !ES_Global.sameValue(propertyDescriptor.__Set__, current.__Set__)) {
                         _denied();
                     }
-                    if ('undefined' !== typeof propertyDescriptor.__Get__ && !sameValue(propertyDescriptor.__Get__, current.__Get__)) {
+                    if ('undefined' !== typeof propertyDescriptor.__Get__ && !ES_Global.sameValue(propertyDescriptor.__Get__, current.__Get__)) {
                         _denied();
                     }
                 }

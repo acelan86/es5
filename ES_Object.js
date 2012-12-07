@@ -3,7 +3,7 @@ function ES_Object(o) {
      * ES_Object是一个属性的集合，属性(property)的表述如下：
      * this._ownProperty[propertyName] = new ES_PropertyIdentifier(o);
      */
-    this._ownProperty = {}; //为表述语言自行添加的，定义中无该集合
+    this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述
     
     //内部属性
     this.__Prototype__ = o.__Prototype__ || null; //此对象原型，为ES_Object || null
@@ -35,14 +35,14 @@ ES_Object.prototype = {
     },
     /**
      * 返回对象自身属性ownProperty的属性描述符
-     * @param  {String} propertyName 属性名
-     * @return {PropertyDescriptor}  属性描述符
+     * @param  {String}             propertyName 属性名
+     * @return {PropertyDescriptor}              属性描述符
      */
     __GetOwnProperty__ : function (propertyName) {
         if ('undefined' === typeof this._ownProperty[propertyName]) {
             return undefined;
         }
-        var desc = new PropertyDescriptor({}),
+        var desc = new ES_PropertyDescriptor({}),
             x = this._ownProperty[propertyName];
         if (PropertyDescriptor.isDataDescriptor(x)) {
             desc.__Value__ = x.__Value__;
@@ -59,8 +59,8 @@ ES_Object.prototype = {
     },
     /**
      * 返回对象完全填入的自身命名属性的属性描述符，即通过__Property__查找的属性的属性描述符
-     * @param  {String} propertyName 属性名
-     * @return {PropertyDescriptor}  属性描述符
+     * @param  {String}             propertyName    属性名
+     * @return {PropertyDescriptor}                 属性描述符
      */
     __GetProperty__ : function (propertyName) {
         var desc = this.__GetOwnProperty__(propertyName);
@@ -73,10 +73,16 @@ ES_Object.prototype = {
         }
         return proto.__GetProperty__(propertyName);
     },
-
-    __Put__ : function (propertyName, value, throw) {
-        if (!this.__Canput__(propertyName)) {
-            if (throw) {
+    /**
+     * 设置命名属性的值
+     * @param  {String}     propertyName 属性名
+     * @param  {Any}        value        属性值
+     * @param  {Boolean}    isThrow        是否抛出错误
+     * @return                  
+     */
+    __Put__ : function (propertyName, value, isThrow) {
+        if (!this.__CanPut__(propertyName)) {
+            if (isThrow) {
                 throw new TypeError();
             } else {
                 return;
@@ -85,28 +91,33 @@ ES_Object.prototype = {
 
         var ownDesc = this.__GetOwnProperty__(propertyName);
         if (PropertyDescriptor.isDataDescriptor(ownDesc)) {
-            var valueDesc = new PropertyDescriptor({
+            var valueDesc = new ES_PropertyDescriptor({
                 __Value__ : value
             });
-            this.__DefineOwnProperty__(propertyName, valueDesc, throw);
+            this.__DefineOwnProperty__(propertyName, valueDesc, isThrow);
             return;
         }
+
         var desc = this.__GetProperty__(propertyName);
         if (PropertyDescriptor.isAccessorDescriptor(desc)) {
             var setter = desc.__Set__;
             setter.__Call__.call(this, value);
         } else {
-            var newDesc = new PropertyDescriptor({
-                __Value__ : value,
-                __Writable__ : true,
-                __Enumerable__ : true,
-                __Configurable__ : true
+            var newDesc = new ES_PropertyDescriptor({
+                __Value__           : value,
+                __Writable__        : true,
+                __Enumerable__      : true,
+                __Configurable__    : true
             });
-            this.__DefineOwnProperty__(propertyName, newDesc, throw);
+            this.__DefineOwnProperty__(propertyName, newDesc, isThrow);
         }
         return;
     },
-
+    /**
+     * 判断是否可以在某个属性上执行__Put__操作
+     * @param  {String}     propertyName 属性名
+     * @return {Boolean}                 是否可以put
+     */
     __CanPut__ : function (propertyName) {
         var desc = this.__GetOwnProperty__(propertyName);
         if (desc !== undefined) {
@@ -135,19 +146,161 @@ ES_Object.prototype = {
         }
     },
 
+    /**
+     * 判断对象是否有某个属性
+     * @param  {String}     propertyName 属性名
+     * @return {Boolean}                 是否具有该属性
+     */
     __HasProperty__ : function (propertyName) {
-        return Boolean;
+        var desc = this.__GetProperty__(propertyName);
+        return desc !== undefined;
     },
 
-    __Delete__ : function (propertyName, Boolean) {
-        return Boolean;
+    /**
+     * 从对象上删除指定的自身命名属性
+     * @param  {String} propertyName 属性名
+     * @param  {[type]} isThrow        是否抛出错误
+     * @return {[type]}              是否成功删除
+     */
+    __Delete__ : function (propertyName, isThrow) {
+        var desc = this.__GetOwnProperty__(propertyName);
+        if (desc === undefined) {
+            return true;
+        }
+        if (desc.__Configurable__) {
+            delete this._ownProperty[propertyName];
+            return true;
+        } else {
+            isThrow && (throw new TypeError());
+            return false;
+        }
+    },
+    /**
+     * 返回对象的默认值
+     * @param  {String}     hint    标识
+     * @return {Primitive}          对象默认值
+     */
+    __DefaultValue__ : function (hint) {
+        //当hint为String时
+        var toString = this.__Get__('toString');
+        if (isCallable(toString)) {
+            var str = toString.__Call__.call(this);
+            if (isPrimitive(str)) {
+                return str;
+            }
+        }
+        var valueOf = this.__Get__('valueOf');
+        if (isCallable(valueOf)) {
+            var val = valueOf.__Call__.call(this);
+            if (isPrimitive(val)) {
+                return val;
+            }
+        }
+        throw new TypeError();
+
+        //@todo 当hint为数字
+        //@todo 当不用hint调用
     },
 
-    __DefaultValue__ : function (Hint) {
-        return primitive;
-    },
-
-    __DefineOwnProperty__ : function (propertyName, PropertyDescriptor, Boolean) {
-        return Boolean
+    /**
+     * 创建或修改自身命名属性为属性描述的状态
+     * @param  {String}                 propertyName       属性名
+     * @param  {ES_PropertyDescriptor}  propertyDescriptor 属性描述符
+     * @param  {Boolean}                isThrow            是否抛出错误
+     * @return {Boolean}                                   是否成功 
+     */
+    __DefineOwnProperty__ : function (propertyName, propertyDescriptor, isThrow) {
+        function _denied() {
+            if (isThrow) {
+                throw new TypeError();
+            } else {
+                return false;
+            }
+        }
+        var current = this.__GetOwnProperty__(propertyName),
+            extensible = this.__Extensible__;
+        if (current === undefined && extensible === false) {
+            _denied();
+        }
+        if (current === undefined && extensible === true) {
+            if (ES_PropertyIdentifier.isGenericDescriptor(propertyDescriptor) || ES_PropertyIdentifier.isDataDescriptor(propertyDescriptor)) {
+                this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                    __Value__           : propertyDescriptor.__Value__,
+                    __Writable__        : propertyDescriptor.__Writable__,
+                    __Enumerable__      : propertyDescriptor.__Enumerable__,
+                    __Configurable__    : propertyDescriptor.__Configurable__
+                });
+            } else {
+                this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                    __Get__             : propertyDescriptor.__Get__,
+                    __Set__             : propertyDescriptor.__Set__,
+                    __Enumerable__      : propertyDescriptor.__Enumerable__,
+                    __Configurable__    : propertyDescriptor.__Configurable__
+                });
+            }
+        }
+        if (propertyDescriptor 不存在任何字段) {
+            return true;
+        }
+        if (sameValue(propertyDescriptor, current)) {
+            return true;
+        }
+        if (current.__Configurable__ === false) {
+            if (propertyDescriptor.__Configurable__ === true) {
+                _denied();
+            }
+            if ('undefined' !== propertyDescriptor.__Enumerable__ && current.__Enumerable__ !== propertyDescriptor.__Enumerable__) {
+                _denied();
+            }
+        }
+        if (!ES_PropertyDescriptor.isGenericDescriptor(propertyDescriptor)) {
+            if (ES_PropertyDescriptor.isDataDescriptor(current) !== ES_PropertyDescriptor.isDataDescriptor(propertyDescriptor)) {
+                if (current.__Configurable__ === false) {
+                    _denied();
+                }
+                if (ES_PropertyDescriptor.isDataDescriptor(current)) {
+                    this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                        __Get__             : undefined,
+                        __Set__             : undefined,
+                        __Enumerable__      : current.__Enumerable__,
+                        __Configurable__    : current.__Configurable__
+                    });
+                } else {
+                    this._ownProperty[propertyName] = new ES_PropertyDescriptor({
+                        __Value__           : undefined,
+                        __Writable__        : false,
+                        __Enumerable__      : current.__Enumerable__,
+                        __Configurable__    : current.__Configurable__
+                    });
+                }
+            } else if (ES_PropertyDescriptor.isDataDescriptor(current) === true && ES_PropertyDescriptor.isDataDescriptor(propertyDescriptor) === true) {
+                if (current.__Configurable__ === false) {
+                    if (current.__Writable__ === false && propertyDescriptor.__Writable__ === true) {
+                        _denied();
+                    }
+                    if (current.__Writable__ === false) {
+                        if ('undefined' !== typeof propertyDescriptor.__Value__ && !sameValue(propertyDescriptor.__Value__, current.__Value__)) {
+                            _denied();
+                        }
+                    }
+                } 
+                //else {
+                //     //current.__Configurable__ === true, 可接受任何更改,更改在最后面
+                // }
+            } else {
+                //ES_PropertyDescriptor.isAccessorDescriptor(current) === true && ES_PropertyDescriptor.isAccessorDescriptor(propertyDescriptor) === true;
+                if (current.__Configurable__ === false) {
+                    if ('undefined' !== typeof propertyDescriptor.__Set__ && !sameValue(propertyDescriptor.__Set__, current.__Set__)) {
+                        _denied();
+                    }
+                    if ('undefined' !== typeof propertyDescriptor.__Get__ && !sameValue(propertyDescriptor.__Get__, current.__Get__)) {
+                        _denied();
+                    }
+                }
+            }
+            //propertyDescriptor有所有特性字段
+            this._ownProperty[propertyName] = new ES_PropertyDescriptor(propertyDescriptor);
+            return true;
+        }
     }
 };

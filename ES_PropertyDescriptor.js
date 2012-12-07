@@ -4,16 +4,16 @@
  */
 function ES_PropertyDescriptor(o) {
     //命名的数据属性（可选）
-    __Value__ : undefined,
-    __Writable__ : false, //若为false, 试图通过__Put__方法去访问__Value__都会失效
+    this.__Value__ = o.__Value__ || undefined,
+    this.__Writable__ = o.__Writable__ || false, //若为false, 试图通过__Put__方法去访问__Value__都会失效
 
     //命名的访问器属性(可选)
-    __Get__ : undefined, //函数方法或者undefined
-    __Set__ : undefined, //函数方法或者undefined
+    this.__Get__ = o.__Get__ || undefined, //函数方法或者undefined
+    this.__Set__ = o.__Set__ || undefined, //函数方法或者undefined
 
     //公共属性
-    __Enumerable__ : false, //是否可被for-in枚举
-    __Configurable__ : false //是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
+    this.__Enumerable__ = o.__Enumerable || false, //是否可被for-in枚举
+    this.__Configurable__ = o.__Configurable__ || false //是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
 }
 
 ES_PropertyDescriptor.isAccessorDescriptor = function (desc) {

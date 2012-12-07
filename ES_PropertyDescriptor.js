@@ -163,12 +163,19 @@ ES_PropertyDescriptor.toPropertyDescriptor = function (obj) {
         }
         desc.__Get__ = getter;
     }
-     if (obj.__hasProperty__('configurable') === true) {
-        var conf = obj.__Get__('configurable');
-        desc.__Configurable__ = ES_Global.toBoolean(conf);
+     if (obj.__hasProperty__('set') === true) {
+        var setter = obj.__Get__('set');
+        if (ES_Global.isCallable(setter) === false && setter !== undefined) {
+            throw new TypeError();
+        }
+        desc.__Set__ = setter;
     }
-    
-    
+    if ('undefined' !== typeof desc.__Set__ || 'undefined' !== typeof desc.__Get__) {
+        if ('undefined' !== typeof desc.__Value__ || 'undefined' !== typeof desc.__Writable__) {
+            throw new TypeError();
+        }
+    }
+    return desc;
 };
 
 

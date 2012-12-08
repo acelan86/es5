@@ -1,0 +1,1 @@
+var ES_LT_Null = null;

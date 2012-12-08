@@ -36,8 +36,14 @@ var ES_Global = {
     /**
      * 测试操作集合
      */
+    /**
+     * 判断是语言类型或者规范类型中的某一种
+     * @param  {Any} any     要判断的对象
+     * @return {ES_TYPE}     包括ES_LT_Undefined, ES_LT_Null, ES_LT_Boolean, ES_LT_String, ES_LT_Number, ES_LT_Object语言类型
+     *                       和ES_ST_Reference, ES_ST_List, ES_ST_Completion, ES_ST_PropertyDescriptor, ES_ST_PropertyIdentifier, ES_ST_LexicalEnvironment, ES_ST_EnvironmentRecords规范类型
+     */
     type : function (any) {
-
+        return any.constructor;
     },
     checkObjectCoercible : function (any) {
 

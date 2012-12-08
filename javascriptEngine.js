@@ -2,17 +2,6 @@ var control = {
     runningEC : null,
     ecStack : []
 };
-/** ===============================
- * 函数声明过程
- */
-function createFunctionObject() {
-    var o = new Object();
-    o.[[class]] = 'function';
-    o.proto = Function.prototype;
-
-    o.scope = control.runningEC.lexicalEnvironment;
-
-}
 
 /** ===============================
  * 执行过程

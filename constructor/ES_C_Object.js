@@ -3,7 +3,7 @@
  * @param {[type]} value [description]
  */
 function ES_C_Object(value) {
-    this.__Prototype__ = ES_BI_FunctionPrototype;
+    this.__Prototype__ = ES_P_Function;
     //提供了value
     if ('undefined' !== typeof value) {
         var obj;
@@ -26,7 +26,7 @@ function ES_C_Object(value) {
     }
     if ('undefined' === typeof value || ('undefined' !== typeof value && (ES_Global.type(value) === ES_LT_Null || ES_Global.type(value) === ES_LT_Undefined))) {
         return new ES_O_Object({
-            __Prototype__ : ES_BI_ObjectPrototype,
+            __Prototype__ : ES_P_Object,
             __Class__ : 'Object',
             __Extensible__ : true
         });
@@ -35,7 +35,7 @@ function ES_C_Object(value) {
 
 ES_C_Object.length = 1;
 
-ES_C_Object.prototype = ES_BI_ObjectPrototype;
+ES_C_Object.prototype = ES_P_Object;
 
 ES_C_Object.getPrototypeOf = function (o) {
     if (ES_Global.type(o) !== ES_LT_Object) {

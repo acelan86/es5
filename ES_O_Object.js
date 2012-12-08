@@ -1,9 +1,14 @@
-function ES_O_Object() {
-	/**
+function ES_O_Object(o) {
+    /**
      * ES_O_Object是一个属性的集合，属性(property)的表述如下：
      * this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(o);
      */
     this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述, 如果使用this[propertyName]，由于js的查找变量特点，会找到链中所有的属性而不是自身属性   
+    //内部属性
+    this.__Prototype__ = o.__Prototype__ || null; //此对象原型，为ES_LT_Object || null
+    this.__Class__ = o.__Class__; //此对象分类的一个字符串，原生对象占用"Arguments", "Array", "Boolean", "Date", "Error", "Function", "JSON", "Math", "Number", "Object", "RegExp", "String"，宿主对象可以为除这些值之外的任何字符串
+    this.__Extensible__ = o.__Extensible__ || false; //是否可以向对象添加自身属性（ownProperty）
+
 }
 
 ES_O_Object.prototype = {

@@ -29,7 +29,7 @@ ES_Object.prototype = {
             if (getter === undefined) {
                 return undefined;
             } else {
-                return getter.__Call__(this); //怎么做？
+                return getter.__Call__(this); //getter是一个functionObject, 改方法定义在ES_functionConstructor.js中
             }
         }
     },

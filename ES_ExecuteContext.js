@@ -70,9 +70,7 @@ function ES_declarationBindingInstantiation(ec, code, isStrict, [args]) {
     for (var linenum = 1, len = code.length; linenum < len; linenum++) {
         if (f = code[linenum] is FunctionDeclaration) {
             fn = f.identifier; //标识符
-            fo = new ES_Function({
-                __Code__ : f
-            });
+            fo = new ES_createFunctionObject(fn, f, isStrict);
             var argAlreadyDeclared = envRec.hasBinding(fn);
             if (argAlreadyDeclared === false) {
                 envRec.createMutableBinding(fn, configurableBindings);

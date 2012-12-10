@@ -36,3 +36,7 @@ var ES_GlobalObject = (function () {
 
     return obj;
 })();
+
+ES_GlobalObject.eval = function (x) {};
+
+ES_GlobalObject.parseInt = function (string, radix) {};

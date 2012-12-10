@@ -43,7 +43,7 @@ var ES_Global = {
      *                       和ES_ST_Reference, ES_ST_List, ES_ST_Completion, ES_ST_PropertyDescriptor, ES_ST_PropertyIdentifier, ES_ST_LexicalEnvironment, ES_ST_EnvironmentRecords规范类型
      */
     type : function (any) {
-        return any.constructor;
+        return any.constructor; //一种描述而已
     },
     checkObjectCoercible : function (any) {
 

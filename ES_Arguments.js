@@ -1,5 +1,6 @@
 /**
  * Arguments对象
+ * 当控制器进入函数代码的执行环境，会创建arguments对象，除非作为“arguments”出现在形参列表中，或者改函数内部变量声明标识符或函数声明标识符为arguments
  */
 function ES_Arguments() {
 

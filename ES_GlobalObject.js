@@ -2,7 +2,7 @@ var ES_GlobalObject = (function () {
     var obj = new ES_Object();
 
     obj.__DefineOwnProperty__(
-        "NaN" : 
+        "NaN",
         new ES_ST_PropertyDescriptor({
             __Value__ : NaN,
             __Writable__ : false,
@@ -13,7 +13,7 @@ var ES_GlobalObject = (function () {
     );
 
     obj.__DefineOwnProperty__(
-        "Infinity" : 
+        "Infinity", 
         new ES_ST_PropertyDescriptor({
             __Value__ : Infinity,
             __Writable__ : false,
@@ -24,7 +24,7 @@ var ES_GlobalObject = (function () {
     );
 
     obj.__DefineOwnProperty__(
-        "undefined" : 
+        "undefined",
         new ES_ST_PropertyDescriptor({
             __Value__ : undefined,
             __Writable__ : false,

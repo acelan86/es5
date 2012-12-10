@@ -17,7 +17,18 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
 
     f.__Call__ = function (thiz, args) {
         //@todo13.2.1
-        var funcCtx = new ES_Context(this.__FormalParameters__, args, thiz)
+        var funcCtx = ES_createExecuteContext(this.__FormalParameters__, args, thiz);
+        ES_control.enter(funcCtx);
+        var result = ES_control.excute(f.__Code__);
+        ES_control.quit();
+        //退出执行环境
+        if (result.type === throw) {
+            throw result.type;
+        }
+        if (result.type === return) {
+            return result.type;
+        }
+        return undefined;
     };
 
     f.__Construct__ = function (args) {

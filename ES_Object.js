@@ -1,6 +1,6 @@
-function ES_O_Object(o) {
+function ES_Object(o) {
     /**
-     * ES_O_Object是一个属性的集合，属性(property)的表述如下：
+     * ES_Object是一个属性的集合，属性(property)的表述如下：
      * this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(o);
      */
     this._ownProperty = {}; //为表述语言自行添加的，ES规范中并无该集合描述, 如果使用this[propertyName]，由于js的查找变量特点，会找到链中所有的属性而不是自身属性   
@@ -11,7 +11,7 @@ function ES_O_Object(o) {
 
 }
 
-ES_O_Object.prototype = {
+ES_Object.prototype = {
     /**
      * 返回命名属性的值
      * @param  {String} propertyName 属性名
@@ -29,7 +29,7 @@ ES_O_Object.prototype = {
             if (getter === undefined) {
                 return undefined;
             } else {
-                return getter.__Call__.call(this); //怎么做？
+                return getter.__Call__(this); //怎么做？
             }
         }
     },

@@ -1,17 +1,19 @@
-var ES_control = {
-    runningEC : null,
-    ecStack : [ES_globalObject]
-};
+//全局控制器
+var ES_control = (function () {
+    var runningEC = ES_globalObject,
+        ecStack = [ES_globalObject];
 
-ES_control.enter = function (ec) {
-    this.ecStack.push(ec);
-    this.runningEC = this.ecStack[this.ecStack.length - 1];
-}
-ES_control.excute = function (code) {
-    return this.runningEC.excute(code);
-};
-
-ES_control.quit = function () {
-    this.ecStack.pop();
-    this.runningEC = this.ecStack[this.ecStack.length - 1];
-}
+    return {
+        enter : function (ec) {
+            ecStack.push(ec);
+            runningEC = ecStack[ecStack.length - 1];
+        },
+        quit : function () {
+            ecStack.pop();
+            runningEC = ecStack[ecStack.length - 1];
+        },
+        excute : function (code) {
+            runningEC.excute(code);
+        }
+    };
+})();

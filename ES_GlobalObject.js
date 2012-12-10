@@ -1,4 +1,4 @@
-var ES_GlobalObject = (function () {
+var ES_globalObject = (function () {
     var obj = new ES_Object();
 
     obj.__DefineOwnProperty__(
@@ -34,9 +34,8 @@ var ES_GlobalObject = (function () {
         false
     );
 
+    obj.eval = function () {};
+    obj.parseInt = function (string) {};
+
     return obj;
 })();
-
-ES_GlobalObject.eval = function (x) {};
-
-ES_GlobalObject.parseInt = function (string, radix) {};

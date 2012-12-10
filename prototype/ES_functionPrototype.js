@@ -6,9 +6,17 @@ var ES_functionPrototype = (function () {
     });
 
     //命名的数据属性
-    fp.length = 0;
+    fp.__DefineOwnProperty__(
+        "length",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : 0
+        }),
+        false
+    });
+
+    //以下同上定义方法
     fp.constructor = ES_functionCounstructor;
-    
+
     //命名的访问器属性
     fp.toString = function () {};
     fp.apply = function (thisArg, argArray) {};

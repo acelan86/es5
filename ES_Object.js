@@ -1,3 +1,8 @@
+/**
+ * ES最原始的对象声明
+ * 依赖 ES_ST_PropertyDescriptor.js
+ * @param {[type]} o [description]
+ */
 function ES_Object(o) {
     /**
      * ES_Object是一个属性的集合，属性(property)的表述如下：
@@ -29,7 +34,7 @@ ES_Object.prototype = {
             if (getter === undefined) {
                 return undefined;
             } else {
-                return getter.__Call__(this); //getter是一个functionObject, 改方法定义在ES_functionConstructor.js中
+                return getter.__Call__(this); //getter是一个functionObject, 方法定义在ES_functionConstructor.js中
             }
         }
     },
@@ -67,7 +72,7 @@ ES_Object.prototype = {
         if (desc !== undefined) {
             return desc;
         }
-        var proto = this.__Prototype__;
+        var proto = this.__Prototype__;   //这里描述了原形链的真谛。。。hia hia hia~~
         if (proto === null) {
             return undefined;
         }
@@ -101,7 +106,7 @@ ES_Object.prototype = {
         var desc = this.__GetProperty__(propertyName);
         if (PropertyDescriptor.isAccessorDescriptor(desc)) {
             var setter = desc.__Set__;
-            setter.__Call__.call(this, value);
+            setter.__Call__(this, value);
         } else {
             var newDesc = new ES_ST_PropertyDescriptor({
                 __Value__           : value,
@@ -184,14 +189,14 @@ ES_Object.prototype = {
         //当hint为String时
         var toString = this.__Get__('toString');
         if (ES_Global.isCallable(toString)) {
-            var str = toString.__Call__.call(this);
+            var str = toString.__Call__(this);
             if (isPrimitive(str)) {
                 return str;
             }
         }
         var valueOf = this.__Get__('valueOf');
         if (ES_Global.isCallable(valueOf)) {
-            var val = valueOf.__Call__.call(this);
+            var val = valueOf.__Call__(this);
             if (isPrimitive(val)) {
                 return val;
             }

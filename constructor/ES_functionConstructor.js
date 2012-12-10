@@ -1,11 +1,11 @@
 /**
- * 创建函数对象的算法
+ * 创建函数对象的算法13.2
  */
 function ES_createFunctionObject(formalParameterList, functionBody, scope, strict) {
-    var f = new ES_O_Object();
+    var f = new ES_Object();
 
     f.__Class__ = 'Function';
-    f.__Prototype__ = ES_BI_FunctionPrototype;
+    f.__Prototype__ = ES_functionPrototype;
     
     f.__Get__ = function (propertyName) {
         var v = ES_O_Object.prototype.__Get__.call(this, propertyName);
@@ -16,7 +16,6 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     };
 
     f.__Call__ = function (thiz, args) {
-        //@todo13.2.1
         var funcCtx = ES_createExecuteContext(this.__FormalParameters__, args, thiz);
         ES_control.enter(funcCtx);
         var result = ES_control.excute(f.__Code__);
@@ -78,6 +77,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     f.__Extensible__ = true;
 
     var len = formalParameterList.length || 0;
+
     f.__DefineOwnProperty__(
         "length",
         new ES_ST_PropertyDescriptor({
@@ -196,6 +196,6 @@ var ES_functionConstructor = (function () {
         }
         return new ES_createFunctionObject(p, body, scope, strict);
     };
-    
+
     return fc;
 })();

@@ -6,5 +6,5 @@ var ES_LT_Object = {
 
 };
 function isES_LT_Object(any) {
-	
+    //利用鸭式辩型模拟引擎确认是否是Object的方法
 }

@@ -1,7 +1,7 @@
 //全局控制器
 var ES_control = (function () {
-    var runningEC = ES_globalObject,
-        ecStack = [ES_globalObject];
+    var runningEC = ES_globalEC,
+        ecStack = [ES_globalEC];
 
     return {
         enter : function (ec) {

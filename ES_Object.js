@@ -5,6 +5,8 @@
  */
 function ES_Object(o) {
     o = o || {};
+
+    this._constructor = 'ES_LT_Object';
     /**
      * ES_Object是一个属性的集合，属性(property)的表述如下：
      * this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(o);

@@ -30,7 +30,21 @@ var ES_Global = {
 
     },
     toObject : function (any) {
-
+        switch (ES_Global.type(any)) {
+            case 'undefined' :
+            case 'null' : 
+                throw new TypeError();
+            case 'boolean' : 
+                return ES_booleanConstructor._new(any);
+            case 'number' : 
+                return ES_numberConstructor._new(any);
+            case 'string' : 
+                return ES_stringConstructor._new(any);
+            case 'ES_LT_Object' :
+                return any;
+            default : 
+                throw new TypeError();
+        }
     },
 
     /**
@@ -43,7 +57,8 @@ var ES_Global = {
      *                       和ES_ST_Reference, ES_ST_List, ES_ST_Completion, ES_ST_PropertyDescriptor, ES_ST_PropertyIdentifier, ES_ST_LexicalEnvironment, ES_ST_EnvironmentRecords规范类型
      */
     type : function (any) {
-        return "ES_LT_Object";
+        var type = typeof any;
+        return ('object' === type ? (any._constructor || "ES_LT_Object") : type);
     },
     checkObjectCoercible : function (any) {
 

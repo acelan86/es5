@@ -2,6 +2,7 @@
  * 引用规范类型(specification types)
  */
 function ES_ST_Reference(base, name, strict) {
+    this._constructor = 'ES_ST_Reference';
     this.baseValue = base; //undefined, ES_LT_Object, Boolean, Number, String, ES_ST_EnviornmentRecords
     this.referenceName = name;
     this.strictReference = strict;
@@ -18,19 +19,19 @@ ES_ST_Reference.prototype = {
     },
     hasPrimitiveBase : function () {
         var type = ES_Global.type(this.baseValue);
-        return type === Boolean || type === String || type === Number;
+        return type === 'boolean' || type === 'string' || type === 'number';
     },
     isPropertyReference : function () {
         var type = ES_Global.type(this.baseValue);
-        return type === Boolean || type === String || type === Number || type === ES_LT_Object;
+        return type === 'boolean' || type === 'string' || type === 'number' || type === 'ES_LT_Object';
     },
     isUnresolvableReference : function () {
-        return this.basValue === undefined;
+        return this.baseValue === undefined;
     }
 };
 
 ES_ST_Reference.getValue = function (ref) {
-    if (ES_Global.type(ref) !== ES_Reference) {
+    if (ES_Global.type(ref) !== "ES_ST_Reference") {
         return ref;
     }
     var base = ref.getBase();

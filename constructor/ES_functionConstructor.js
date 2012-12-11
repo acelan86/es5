@@ -149,7 +149,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
  * @param {[type]} body [description]
  */
 var ES_functionConstructor = (function () {
-    var fc = new Object({
+    var fc = new ES_Object({
         __Class__ : 'Function',
         __Prototype__ : ES_functionPrototype,
         __Extensible__ : true

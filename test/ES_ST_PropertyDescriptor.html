@@ -18,10 +18,19 @@
         <script src="../ES_Object.js"></script>
         <script src="../prototype/ES_objectPrototype.js"></script>
         <script src="../prototype/ES_functionPrototype.js"></script>
+        <script src="../prototype/ES_booleanPrototype.js"></script>
+        <script src="../prototype/ES_numberPrototype.js"></script>
+        <script src="../prototype/ES_stringPrototype.js"></script>
         <script src="../constructor/ES_objectConstructor.js"></script>
         <script src="../ES_globalEC.js"></script>
         <script src="../ES_throwTypeError.js"></script>
         <script src="../constructor/ES_functionConstructor.js"></script>
+        <script src="../constructor/ES_booleanConstructor.js"></script>
+        <script src="../constructor/ES_numberConstructor.js"></script>
+        <script src="../constructor/ES_stringConstructor.js"></script>
+
+        <script src="../Type/ES_ST_Reference.js"></script>
+
         <script>
             var dataDesc = new ES_ST_PropertyDescriptor({
                 __Value__ : 1,
@@ -153,6 +162,12 @@
             /**
              * 引用类型测试
              */
+            // var primitiveRef = new ES_ST_Reference(1, 'primitiveRef', true),
+            //     objRef = new ES_ST_Reference(ES_functionConstructor._new(), 'objRef', true);
+
+            // test('ES_ST_Reference.getValue', function () {
+            //     strictEqual(ES_ST_Reference.getValue(primitiveRef), 1, 'primitiveRef.value is 1');
+            // });
             
 
         </script>

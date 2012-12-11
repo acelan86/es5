@@ -7,34 +7,71 @@ var ES_objectPrototype = (function () {
 
     //下面其实都是用op.__DefineOwnProperty__定义的属性，为命名数据属性或者命名访问器属性，这样写就是为了方便
     op.__DefineOwnProperty__(
-        "constructor",
+        "es_constructor",
         new ES_ST_PropertyDescriptor({
-            __Value__ : ES_objectConstructor,
+            __Value__ : "ES_objectConstructor",
         }),
         false
     );
     op.__DefineOwnProperty__(
-        "toString",
+        "es_toString",
         new ES_ST_PropertyDescriptor({
-            __Get__ : function () {
-
+            __Value__ : function () {
+                return "[[object prototype es_toString function code]]";
+            }
+        }),
+        false
+    );
+    op.__DefineOwnProperty__(
+        "es_valueOf",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function () {
+                return "[[object prototype es_valueOf function code]]";
+            }
+        }),
+        false
+    );
+    op.__DefineOwnProperty__(
+        "es_hasOwnProperty",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function (v) {
+                return "[[object prototype es_hasOwnProperty function code]]";
+                var p = ES_Global.toString(v),
+                    o = ES_Global.toObject(this),
+                    desc = o.__GetOwnProperty__(p);
+                return desc !== undefined;
+            }
+        }),
+        false
+    );
+    op.__DefineOwnProperty__(
+        "es_toLocalString",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function () {
+                return "[[object prototype toLocalString function code]]";
             }
         }),
         false
     );
 
-    //下面同上定义方法
-    op.toLocalString = function () {};
-    op.toLocalString = function () {};
-    op.valueOf = function () {};
-    op.hasOwnProperty = function (v) {
-        var p = ES_Global.toString(v),
-            o = ES_Global.toObject(this),
-            desc = o.__GetOwnProperty__(p);
-        return desc !== undefined;
-    };
-    op.isPrototypeOf = function () {};
-    op.propertyIsEnumerable = function (v) {};
+    op.__DefineOwnProperty__(
+        "es_isPrototypeOf",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function () {
+                return "[[object prototype es_isPrototypeOf function code]]";
+            }
+        }),
+        false
+    );
+    op.__DefineOwnProperty__(
+        "es_propertyIsEnumerable",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function (v) {
+                return "[[object prototype es_propertyIsEnumerable function code]]";
+            }
+        }),
+        false
+    );
 
     return op;
 })();

@@ -4,7 +4,7 @@
  */
 var ES_objectConstructor = (function () {
     var oc = new ES_Object({
-        __Prototype__ = ES_functionPrototype
+        __Prototype__ : ES_functionPrototype
     });
 
     oc.length = 1;
@@ -75,12 +75,12 @@ var ES_objectConstructor = (function () {
         if ('undefined' !== typeof value) {
             var obj;
             switch (ES_Global.type(value)) {
-                case ES_LT_Object : 
-                    if (value is 原生对象) {
+                case "ES_LT_Object" : 
+                    if (ES_Global.isBuildIn(value)) {
                         obj = value;
                     }
-                    if (value is 宿主对象) {
-                        .... 15.2.1
+                    if (ES_Global.isHost(value)) {
+                       //.... 15.2.1
                     }
                     break;
                 case ES_LT_String : 
@@ -91,9 +91,9 @@ var ES_objectConstructor = (function () {
             }
             return obj;
         }
-        if ('undefined' === typeof value || ('undefined' !== typeof value && (ES_Global.type(value) === ES_LT_Null || ES_Global.type(value) === ES_LT_Undefined))) {
+        if ('undefined' === typeof value || ('undefined' !== typeof value && (ES_Global.type(value) === "ES_LT_Null" || ES_Global.type(value) === "ES_LT_Undefined"))) {
             return new ES_Object({
-                __Prototype__ : ES_P_Object,
+                __Prototype__ : ES_objectPrototype,
                 __Class__ : 'Object',
                 __Extensible__ : true
             });

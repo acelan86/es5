@@ -3,16 +3,20 @@
  */
 function ES_ST_PropertyDescriptor(o) {
     //命名的数据属性（可选）
-    this.__Value__ = o.__Value__ || undefined,
-    this.__Writable__ = o.__Writable__ || false, //若为false, 试图通过__Put__方法去访问__Value__都会失效
+    if ('undefined' !== typeof o.__Value__ ) {
+        this.__Value__ = o.__Value__;
+        this.__Writable__ = o.__Writable__ || false; //若为false, 试图通过__Put__方法去访问__Value__都会失效
+    }
 
     //命名的访问器属性(可选)
-    this.__Get__ = o.__Get__ || undefined, //函数方法或者undefined
-    this.__Set__ = o.__Set__ || undefined, //函数方法或者undefined
+    if ('undefined' !== typeof o.__Get__ || 'undefined' !== typeof o.__Set__) {
+        this.__Get__ = o.__Get__ || undefined; //函数方法或者undefined
+        this.__Set__ = o.__Set__ || undefined; //函数方法或者undefined
+    }
 
     //公共属性
-    this.__Enumerable__ = o.__Enumerable || false, //是否可被for-in枚举
-    this.__Configurable__ = o.__Configurable__ || false //是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
+    this.__Enumerable__ = o.__Enumerable || false; //是否可被for-in枚举
+    this.__Configurable__ = o.__Configurable__ || false;//是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
 }
 
 /**
@@ -54,7 +58,7 @@ ES_ST_PropertyDescriptor.isGenericDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
-    if (!PropertyDescriptor.isAccessorDescriptor(desc) && !PropertyDescriptor.isDataDescriptor(desc)) {
+    if (!ES_ST_PropertyDescriptor.isAccessorDescriptor(desc) && !ES_ST_PropertyDescriptor.isDataDescriptor(desc)) {
         return true;
     }
     return false;
@@ -65,7 +69,7 @@ ES_ST_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
-    var obj = new ES_LT_Object();
+    var obj = ES_objectConstructor._new();
     if (ES_ST_PropertyDescriptor.isDataDescriptor(desc)) {
         obj.__DefineOwnProperty__(
             "value",
@@ -136,34 +140,34 @@ ES_ST_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
 };
 
 ES_ST_PropertyDescriptor.toPropertyDescriptor = function (obj) {
-    if (ES_Global.type(obj) !== ES_LT_Object) {
+    if (ES_Global.type(obj) !== "ES_LT_Object") {
         throw new TypeError();
     }
     var desc = new ES_ST_PropertyDescriptor({});
-    if (obj.__hasProperty__('enumerable') === true) {
-        var enum = obj.__Get__('enumerable');
-        desc.__Enumerable__ = ES_Global.toBoolean(enum);
+    if (obj.__HasProperty__('enumerable') === true) {
+        var enume = obj.__Get__('enumerable');
+        desc.__Enumerable__ = ES_Global.toBoolean(enume);
     }
-    if (obj.__hasProperty__('configurable') === true) {
+    if (obj.__HasProperty__('configurable') === true) {
         var conf = obj.__Get__('configurable');
         desc.__Configurable__ = ES_Global.toBoolean(conf);
     }
-    if (obj.__hasProperty__('value') === true) {
+    if (obj.__HasProperty__('value') === true) {
         var value = obj.__Get__('value');
         desc.__Value__ = value;
     }
-    if (obj.__hasProperty__('writable') === true) {
+    if (obj.__HasProperty__('writable') === true) {
         var writable = obj.__Get__('writable');
         desc.__Writable__ = ES_Global.toBoolean(writable);
     }
-     if (obj.__hasProperty__('get') === true) {
+     if (obj.__HasProperty__('get') === true) {
         var getter = obj.__Get__('get');
         if (ES_Global.isCallable(getter) === false && getter !== undefined) {
             throw new TypeError();
         }
         desc.__Get__ = getter;
     }
-     if (obj.__hasProperty__('set') === true) {
+     if (obj.__HasProperty__('set') === true) {
         var setter = obj.__Get__('set');
         if (ES_Global.isCallable(setter) === false && setter !== undefined) {
             throw new TypeError();

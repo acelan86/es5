@@ -8,8 +8,8 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     f.__Prototype__ = ES_functionPrototype;
     
     f.__Get__ = function (propertyName) {
-        var v = ES_O_Object.prototype.__Get__.call(this, propertyName);
-        if (propertyName === 'caller' && v is strict) {
+        var v = ES_Object.prototype.__Get__.call(this, propertyName);
+        if (propertyName === 'es_caller' && ES_Global.isStrictCode(v)) {
             throw new TypeError();
         }
         return v;
@@ -21,17 +21,17 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         var result = ES_control.excute(f.__Code__);
         ES_control.quit();
         //退出执行环境
-        if (result.type === throw) {
+        if (ES_Global.isThrowCode(result.type)) {
             throw result.type;
         }
-        if (result.type === return) {
+        if (ES_Global.isReturnCode(result.type)) {
             return result.type;
         }
         return undefined;
     };
 
     f.__Construct__ = function (args) {
-        var obj = new ES_O_Object({
+        var obj = new ES_Object({
             __Class__ : 'Object',
             __Extensible__ : true,
         });
@@ -69,7 +69,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
 
     f.__Scope__ = scope;
 
-    var names = new ES_ST_List(formalParameterList);
+    var names = formalParameterList; //ES_ST_List类型
     f.__FormalParameters__ = names;
 
     f.__Code__ = functionBody;
@@ -79,7 +79,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     var len = formalParameterList.length || 0;
 
     f.__DefineOwnProperty__(
-        "length",
+        "es_length",
         new ES_ST_PropertyDescriptor({
             __Value__ : len,
             __Writable__ : false,
@@ -89,10 +89,10 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         false
     );
 
-    var proto = ES_C_Object();
+    var proto = ES_objectConstructor._new();
 
     proto.__DefineOwnProperty__(
-        "constructor",
+        "es_constructor",
         new ES_ST_PropertyDescriptor({
             __Value__ : f,
             __Writable__ : true,
@@ -103,7 +103,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     );
 
     f.__DefineOwnProperty__(
-        "prototype",
+        "es_prototype",
         new ES_ST_PropertyDescriptor({
             __Value__ : proto,
             __Writable__ : true,
@@ -114,9 +114,9 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     );
 
     if (strict === true) {
-        var thrower //13.2.3
+        var thrower = ES_throwTypeError;//13.2.3
         f.__DefineOwnProperty__(
-            "caller",
+            "es_caller",
             new ES_ST_PropertyDescriptor({
                 __Get__ : thrower,
                 __Set__ : thrower,
@@ -126,7 +126,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
             false
         );
         f.__DefineOwnProperty__(
-            "arguments",
+            "es_arguments",
             new ES_ST_PropertyDescriptor({
                 __Get__ : thrower,
                 __Set__ : thrower,
@@ -159,7 +159,7 @@ var ES_functionConstructor = (function () {
     fc.length = 1;
 
     //作为构造器使用
-    fc._new = function (p1, p2, ..., pn, body) {
+    fc._new = function (/* p1, p2, ... pn, body */) {
         var argCount = arguments.length;//参数总数， 包括body
         var p = '';
         if (argCount === 0) {
@@ -179,14 +179,14 @@ var ES_functionConstructor = (function () {
             body = arguments[k - 1];
         }
         body = ES_Global.toString(body);
-        if (p isnot FormalParameterListopt) {
+        if (!ES_Global.isFormalParameterListopt(p)) {
             throw new SyntaxError();
         }
-        if (body isnot FunctionBody) {
+        if (!ES_Global.isFunctionBody(body)) {
             throw new SyntaxError();
         }
         var strict;
-        if (body is strict) {
+        if (ES_Global.isStrictCode(body)) {
             strict = true;
         } else {
             strict = false;
@@ -194,6 +194,8 @@ var ES_functionConstructor = (function () {
         if (strict) {
             throw Error(); //13.1 todo
         }
+        //scope哪里来的？ 
+        var scope = scope || {};
         return new ES_createFunctionObject(p, body, scope, strict);
     };
 

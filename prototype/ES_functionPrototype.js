@@ -7,19 +7,40 @@ var ES_functionPrototype = (function () {
 
     //命名的数据属性
     fp.__DefineOwnProperty__(
-        "length",
+        "es_length",
         new ES_ST_PropertyDescriptor({
             __Value__ : 0
         }),
         false
-    });
+    );
 
     //以下同上定义方法
-    fp.constructor = ES_functionCounstructor;
+    fp.__DefineOwnProperty__(
+        "es_constructor",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : "ES_functionCounstructor"
+        }),
+        false
+    );
 
-    //命名的访问器属性
-    fp.toString = function () {};
-    fp.apply = function (thisArg, argArray) {};
+    fp.__DefineOwnProperty__(
+        "es_toString",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function () {
+                return "[[functionPrototype toString function Code]]";
+            }
+        }),
+        false
+    );
+    fp.__DefineOwnProperty__(
+        "es_apply",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : function (thisArg, argArray) {
+                return "[[function prototype apply function code]]";
+            }
+        }),
+        false
+    );
 
     return fp;
 })();

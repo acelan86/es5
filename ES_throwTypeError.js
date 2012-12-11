@@ -11,10 +11,10 @@ var ES_throwTypeError = (function () {
         var result = ES_control.excute(f.__Code__);
         ES_control.quit();
         //退出执行环境
-        if (result.type === throw) {
+        if (ES_Global.isThrowCode(result.type)) {
             throw result.type;
         }
-        if (result.type === return) {
+        if (ES_Global.isReturnCode(result.type)) {
             return result.type;
         }
         return undefined;

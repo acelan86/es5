@@ -9,7 +9,7 @@ var ES_Global = {
 
     },
     toBoolean : function (any) {
-
+        return !!any;
     },
     toNumber : function (any) {
 
@@ -43,7 +43,7 @@ var ES_Global = {
      *                       和ES_ST_Reference, ES_ST_List, ES_ST_Completion, ES_ST_PropertyDescriptor, ES_ST_PropertyIdentifier, ES_ST_LexicalEnvironment, ES_ST_EnvironmentRecords规范类型
      */
     type : function (any) {
-        return any.constructor; //一种描述而已
+        return "ES_LT_Object";
     },
     checkObjectCoercible : function (any) {
 
@@ -53,5 +53,17 @@ var ES_Global = {
     },
     sameValue : function (a, b) {
 
+    },
+
+
+    isFormalParameterListopt : function () {
+        return true;
+    },
+    isFunctionBody : function () {
+        return true;
+    },
+    isStrictCode : function (code) {
+        code = code || "";
+        return code.indexOf('strict') >= 0;
     }
 };

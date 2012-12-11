@@ -4,6 +4,7 @@
  * @param {[type]} o [description]
  */
 function ES_Object(o) {
+    o = o || {};
     /**
      * ES_Object是一个属性的集合，属性(property)的表述如下：
      * this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(o);
@@ -27,7 +28,7 @@ ES_Object.prototype = {
         if (desc === undefined) {
             return undefined;
         }
-        if (PropertyDescriptor.isDataDescriptor(desc)) {
+        if (ES_ST_PropertyDescriptor.isDataDescriptor(desc)) {
             return desc.__Value__;
         } else {
             var getter = desc.__Get__;
@@ -47,9 +48,9 @@ ES_Object.prototype = {
         if ('undefined' === typeof this._ownProperty[propertyName]) {
             return undefined;
         }
-        var desc = new ES_PropertyDescriptor({}),
+        var desc = new ES_ST_PropertyDescriptor({}),
             x = this._ownProperty[propertyName];
-        if (PropertyDescriptor.isDataDescriptor(x)) {
+        if (ES_ST_PropertyDescriptor.isDataDescriptor(x)) {
             desc.__Value__ = x.__Value__;
             desc.__Writable__ = x.__Writable__;
         } else {
@@ -65,7 +66,7 @@ ES_Object.prototype = {
     /**
      * 返回对象完全填入的自身命名属性的属性描述符，即通过__Property__查找的属性的属性描述符
      * @param  {String}             propertyName    属性名
-     * @return {PropertyDescriptor}                 属性描述符
+     * @return {ES_ST_PropertyDescriptor}                 属性描述符
      */
     __GetProperty__ : function (propertyName) {
         var desc = this.__GetOwnProperty__(propertyName);
@@ -95,8 +96,8 @@ ES_Object.prototype = {
         }
 
         var ownDesc = this.__GetOwnProperty__(propertyName);
-        if (PropertyDescriptor.isDataDescriptor(ownDesc)) {
-            var valueDesc = new ES_PropertyDescriptor({
+        if (ES_ST_PropertyDescriptor.isDataDescriptor(ownDesc)) {
+            var valueDesc = new ES_ST_PropertyDescriptor({
                 __Value__ : value
             });
             this.__DefineOwnProperty__(propertyName, valueDesc, isThrow);
@@ -104,7 +105,7 @@ ES_Object.prototype = {
         }
 
         var desc = this.__GetProperty__(propertyName);
-        if (PropertyDescriptor.isAccessorDescriptor(desc)) {
+        if (ES_ST_PropertyDescriptor.isAccessorDescriptor(desc)) {
             var setter = desc.__Set__;
             setter.__Call__(this, value);
         } else {
@@ -126,7 +127,7 @@ ES_Object.prototype = {
     __CanPut__ : function (propertyName) {
         var desc = this.__GetOwnProperty__(propertyName);
         if (desc !== undefined) {
-            if (PropertyDescriptor.isAccessorDescriptor(desc)) {
+            if (ES_ST_PropertyDescriptor.isAccessorDescriptor(desc)) {
                 return desc.__Set__ !== undefined;
             } else {
                 return desc.__Writable__;
@@ -141,7 +142,7 @@ ES_Object.prototype = {
         if (inherited === undefined) {
             return this.__Extensible__;
         }
-        if (PropertyDescriptor.isAccessorDescriptor(inherited)) {
+        if (ES_ST_PropertyDescriptor.isAccessorDescriptor(inherited)) {
             return inherited.__Set__ !== undefined;
         }
         if (!this.__Extensible__) {
@@ -176,8 +177,11 @@ ES_Object.prototype = {
             delete this._ownProperty[propertyName];
             return true;
         } else {
-            isThrow && (throw new TypeError());
-            return false;
+            if (isThrow) {
+                throw new TypeError();
+            } else {
+                return false;
+            }
         }
     },
     /**
@@ -187,14 +191,14 @@ ES_Object.prototype = {
      */
     __DefaultValue__ : function (hint) {
         //当hint为String时
-        var toString = this.__Get__('toString');
+        var toString = this.__Get__('es_toString');
         if (ES_Global.isCallable(toString)) {
             var str = toString.__Call__(this);
             if (isPrimitive(str)) {
                 return str;
             }
         }
-        var valueOf = this.__Get__('valueOf');
+        var valueOf = this.__Get__('es_valueOf');
         if (ES_Global.isCallable(valueOf)) {
             var val = valueOf.__Call__(this);
             if (isPrimitive(val)) {
@@ -225,10 +229,10 @@ ES_Object.prototype = {
         var current = this.__GetOwnProperty__(propertyName),
             extensible = this.__Extensible__;
         if (current === undefined && extensible === false) {
-            _denied();
+            return _denied();
         }
         if (current === undefined && extensible === true) {
-            if (ES_PropertyIdentifier.isGenericDescriptor(propertyDescriptor) || ES_ST_PropertyIdentifier.isDataDescriptor(propertyDescriptor)) {
+            if (ES_ST_PropertyDescriptor.isGenericDescriptor(propertyDescriptor) || ES_ST_PropertyDescriptor.isDataDescriptor(propertyDescriptor)) {
                 this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
                     __Value__           : propertyDescriptor.__Value__,
                     __Writable__        : propertyDescriptor.__Writable__,
@@ -243,8 +247,9 @@ ES_Object.prototype = {
                     __Configurable__    : propertyDescriptor.__Configurable__
                 });
             }
+            return true;
         }
-        if (propertyDescriptor 不存在任何字段) {
+        if (propertyDescriptor.length === 0) {
             return true;
         }
         if (ES_Global.sameValue(propertyDescriptor, current)) {
@@ -252,16 +257,16 @@ ES_Object.prototype = {
         }
         if (current.__Configurable__ === false) {
             if (propertyDescriptor.__Configurable__ === true) {
-                _denied();
+                return _denied();
             }
             if ('undefined' !== propertyDescriptor.__Enumerable__ && current.__Enumerable__ !== propertyDescriptor.__Enumerable__) {
-                _denied();
+                return _denied();
             }
         }
         if (!ES_ST_PropertyDescriptor.isGenericDescriptor(propertyDescriptor)) {
             if (ES_ST_PropertyDescriptor.isDataDescriptor(current) !== ES_ST_PropertyDescriptor.isDataDescriptor(propertyDescriptor)) {
                 if (current.__Configurable__ === false) {
-                    _denied();
+                    return _denied();
                 }
                 if (ES_ST_PropertyDescriptor.isDataDescriptor(current)) {
                     this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
@@ -281,11 +286,11 @@ ES_Object.prototype = {
             } else if (ES_ST_PropertyDescriptor.isDataDescriptor(current) === true && ES_ST_PropertyDescriptor.isDataDescriptor(propertyDescriptor) === true) {
                 if (current.__Configurable__ === false) {
                     if (current.__Writable__ === false && propertyDescriptor.__Writable__ === true) {
-                        _denied();
+                        return _denied();
                     }
                     if (current.__Writable__ === false) {
                         if ('undefined' !== typeof propertyDescriptor.__Value__ && !ES_ST_Global.sameValue(propertyDescriptor.__Value__, current.__Value__)) {
-                            _denied();
+                            return _denied();
                         }
                     }
                 } 
@@ -296,10 +301,10 @@ ES_Object.prototype = {
                 //ES_ST_PropertyDescriptor.isAccessorDescriptor(current) === true && ES_ST_PropertyDescriptor.isAccessorDescriptor(propertyDescriptor) === true;
                 if (current.__Configurable__ === false) {
                     if ('undefined' !== typeof propertyDescriptor.__Set__ && !ES_Global.sameValue(propertyDescriptor.__Set__, current.__Set__)) {
-                        _denied();
+                        return _denied();
                     }
                     if ('undefined' !== typeof propertyDescriptor.__Get__ && !ES_Global.sameValue(propertyDescriptor.__Get__, current.__Get__)) {
-                        _denied();
+                        return _denied();
                     }
                 }
             }

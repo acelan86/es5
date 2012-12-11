@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>测试ES_Object</title>
+        <link rel="stylesheet" href="./qunit.css" type="text/css"/>
+        <script type="text/javascript" src="./qunit.js"></script>
+    </head>
+    <body>
+        <h1 id="qunit-header">QUnit Test Suite</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+
+        <script src="../ES_Global.js"></script>
+        <script src="../Type/ES_ST_PropertyDescriptor.js"></script>
+        <script src="../ES_Object.js"></script>
+        <script src="../prototype/ES_objectPrototype.js"></script>
+        <script src="../prototype/ES_functionPrototype.js"></script>
+        <script src="../constructor/ES_objectConstructor.js"></script>
+        <script src="../ES_globalEC.js"></script>
+        <script src="../ES_throwTypeError.js"></script>
+        <script src="../constructor/ES_functionConstructor.js"></script>
+        <script>
+            var dataDesc = new ES_ST_PropertyDescriptor({
+                __Value__ : 1,
+                __Writable__ : true,
+                __Enumerable__ : true,
+                __Configurable__ : true
+            });
+
+            var accessorDesc = new ES_ST_PropertyDescriptor({
+                __Get__ : function () {},
+                __Set__ : function () {},
+                __Enumerable__ : true,
+                __Configurable__ : true
+            });
+
+            var genericDesc = new ES_ST_PropertyDescriptor({});
+
+            var newObj = ES_objectConstructor._new(),
+                dataObj,
+                accessorObj,
+                genericObj;
+
+            test('ES_ST_PropertyDescriptor.isAccessorDescriptor', function () {
+                ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(undefined), 'undefined is not accessorDescriptor');
+                ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(dataDesc), 'dataDesc is not accessorDescriptor');
+                ok(ES_ST_PropertyDescriptor.isAccessorDescriptor(accessorDesc), 'accessorDesc is accessorDescriptor');
+                ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(genericDesc), 'genericDesc is not accessorDescriptor');
+            });
+            test('ES_ST_PropertyDescriptor.isDataDescriptor', function () {
+                ok(!ES_ST_PropertyDescriptor.isDataDescriptor(undefined), 'undefined is not dataDescriptor');
+                ok(ES_ST_PropertyDescriptor.isDataDescriptor(dataDesc), 'dataDesc is dataDescriptor');
+                ok(!ES_ST_PropertyDescriptor.isDataDescriptor(accessorDesc), 'accessorDesc is not dataDescriptor');
+                ok(!ES_ST_PropertyDescriptor.isDataDescriptor(genericDesc), 'genericDesc is not dataDescriptor');
+            });
+            test('ES_ST_PropertyDescriptor.isGenericDescriptor', function () {
+                ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(undefined), 'undefined is not genericDescriptor');
+                ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(dataDesc), 'dataDesc is not genericDescriptor');
+                ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(accessorDesc), 'accessorDesc is not genericDescriptor');
+                ok(ES_ST_PropertyDescriptor.isGenericDescriptor(genericDesc), 'genericDesc is genericDescriptor');
+            });
+
+            test('ES_ST_PropertyDescriptor.fromPropertyDescriptor', function () {
+                var _obj
+                ok(dataObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(dataDesc), 'dataDesc to object');
+                console.debug(_obj);
+                ok(accessorObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(accessorDesc), 'accessorDesc to object');
+                console.debug(_obj);
+                ok(genericObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(genericDesc), 'genericDesc to object');
+                console.debug(_obj);
+            });
+
+            test('ES_ST_PropertyDescriptor.toPropertyDescriptor', function () {
+                var _desc;
+                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(newObj), 'newObj to desc');
+                console.debug(_desc);
+                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(dataObj), 'dataObj to dataDesc');
+                console.debug(_desc);
+                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(accessorObj), 'accessorObj to accessorDesc');
+                console.debug(_desc);
+                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(genericObj), 'genericObj to genericDesc');
+                console.debug(_desc);
+            });
+
+
+            var opOwnProperty = ["es_constructor", "es_valueOf", "es_toString", "es_hasOwnProperty", "es_toLocalString", "es_isPrototypeOf", "es_propertyIsEnumerable"],
+                fpOwnProperty = ["es_constructor", "es_toString", "es_length", "es_apply"],
+                oOwnProperty = [],
+                fOwnProperty = [];
+
+            test('ES_objectPrototype', function () {
+                var obj = ES_objectPrototype,
+                    op = opOwnProperty;
+                strictEqual(obj.__Class__, "Object", "objprototype.__Class__ is 'Object'");
+                strictEqual(obj.__Prototype__, null, "objprototype.__Prototype__ is null");
+                for (var i = 0, len = op.length; i < len; i++) {
+                    notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is objprototype's ownproperty");
+                    console.debug(obj.__Get__(op[i]));
+                }
+            });
+
+            test('ES_functionPrototype', function () {
+                var obj = ES_functionPrototype,
+                    op = fpOwnProperty,
+                    p = op.concat(opOwnProperty);
+
+                strictEqual(obj.__Class__, "Function", "fucprototype.__Class__ is 'Object'");
+                strictEqual(obj.__Prototype__, ES_objectPrototype, "funcprototype.__Prototype__ is objprototype");
+
+                for (var i = 0, len = op.length; i < len; i++) {
+                    notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is funcprototype's ownproperty");
+                }
+                for (var i = 0, len = p.length; i < len; i++) {
+                    strictEqual(obj.__HasProperty__(p[i]), true, p[i] + " is funcprototype's property");
+                }
+            });
+
+
+            test('ES_Object', function () {
+                var obj = ES_objectConstructor._new(),
+                    op = oOwnProperty;
+                    p = op.concat(opOwnProperty);
+                strictEqual(obj.__Class__, "Object", "obj.__Class__ is 'Object'");
+                strictEqual(obj.__Prototype__, ES_objectPrototype, "obj.__Prototype__ is ES_objectPrototype");
+
+                for (var i = 0, len = op.length; i < len; i++) {
+                    notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is object's ownproperty");
+                }
+                for (var i = 0, len = p.length; i < len; i++) {
+                    strictEqual(obj.__HasProperty__(p[i]), true, p[i] + " is object's property");
+                }
+            });
+
+            test('ES_Function', function () {
+                var fo = ES_functionConstructor._new(),
+                    op = fOwnProperty,
+                    p = op.concat(fpOwnProperty).concat(opOwnProperty);
+                strictEqual(fo.__Class__, "Function", "fo.__Class__ is 'Function'");
+                strictEqual(fo.__Prototype__, ES_functionPrototype, "fo.__Prototype__ is ES_functionPrototype");
+                for (var i = 0, len = op.length; i < len; i++) {
+                    notStrictEqual(fo.__GetOwnProperty__(op[i]), undefined, op[i] + " is function's ownproperty");
+                }
+                for (var i = 0, len = p.length; i < len; i++) {
+                    strictEqual(fo.__HasProperty__(p[i]), true, p[i] + " is function's property");
+                }
+            });
+
+
+
+            /**
+             * 引用类型测试
+             */
+            
+
+        </script>
+    </body>
+</html>

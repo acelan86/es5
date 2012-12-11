@@ -12,6 +12,9 @@ ES5.1
 ==
 1. ES_LT_XXX 语言类型 (包括Undefined, Null, Boolean, String, Number, Object)
 2. ES_ST_XXX 规范类型 (包括Refrence, List, Completion, PropertyDescriptor, PropertyIdentifier, LexicalEnvironment, EnvironmentRecords)
-3. ES_O_XXX 对象
-4. ES_C_XXX 构造器
-5. ES_BI_XXX 内建对象
+3. ES_Object ecma原生对象
+4. constructor/.. 构造器目录，存放了new表达式执行构造一个任何对象时候执行的步骤，返回一个对象
+5. prototype/..   原型目录，存放了ecma原生的原型对象，如Object.prototype, Function.prototype
+6. Type/...  类型目录， 存放了ecma定义的数据类型和规范类型的定义，包括Undefined, Null, String, Number, Boolean, Object数据类型和Completion，Reference等规范类型
+7. ES_GlobalObject 唯一全局对象的定义，包含了全局对象属性及方法的定义
+8. ES_ExecuteContext 执行上下文相关方法定义

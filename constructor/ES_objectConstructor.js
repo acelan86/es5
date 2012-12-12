@@ -83,9 +83,9 @@ var ES_objectConstructor = (function () {
                        //.... 15.2.1
                     }
                     break;
-                case ES_LT_String : 
-                case ES_LT_Boolean : 
-                case ES_LT_Number : 
+                case "string" : 
+                case "boolean" : 
+                case "number" : 
                     obj = ES_Global.toObject(value);
                     break;
             }

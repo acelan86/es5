@@ -67,7 +67,7 @@ ES_ST_Reference.getValue = function (ref) {
 };
 
 ES_ST_Reference.putValue = function (ref, value) {
-    if (ES_Global.type(ref) !== ES_ST_Reference) {
+    if (ES_Global.type(ref) !== "ES_ST_Reference") {
         throw new ReferenceError();
     }
     var base = ref.getBase();
@@ -76,7 +76,7 @@ ES_ST_Reference.putValue = function (ref, value) {
         if (ref.isStrictReference()) {
             throw new ReferenceError();
         }
-        return globalObj.__Put__(ref.getReferencedName(), value, false);
+        return ES_globalObject.__Put__(ref.getReferencedName(), value, false);
     } else if (ref.isPropertyReference()) {
         var putter = null;
         if (!ref.hasPrimitiveBase()) {

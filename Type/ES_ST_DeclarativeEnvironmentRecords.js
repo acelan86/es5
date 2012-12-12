@@ -4,6 +4,7 @@
  * 用于绑定作用域内定义的标识符
  */
 function ES_ST_DeclarativeEnvironmentRecords() {
+    this._constructor = 'ES_ST_DeclarativeEnvironmentRecords';
     this.bindingObject = {};
 }
 ES_ST_DeclarativeEnvironmentRecords.prototype = {
@@ -24,7 +25,7 @@ ES_ST_DeclarativeEnvironmentRecords.prototype = {
         if (!this.hasBinding(name)) {
             this.bindingObject[name] = { 
                 writable : true,
-                configurable : canDelete,
+                configurable : canDelete || false,
                 value : undefined 
             };
         }

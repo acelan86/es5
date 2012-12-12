@@ -16,9 +16,9 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     };
 
     f.__Call__ = function (thiz, args) {
-        var funcCtx = ES_createExecuteContext(this.__FormalParameters__, args, thiz);
+        var funcCtx = ES_createExecuteContext(this, args, thiz);
         ES_control.enter(funcCtx);
-        var result = ES_control.excute(f.__Code__);
+        var result = ES_control.execute(this.__Code__);
         ES_control.quit();
         //退出执行环境
         if (ES_Global.isThrowCode(result.type)) {

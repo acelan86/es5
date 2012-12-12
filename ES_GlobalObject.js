@@ -1,5 +1,7 @@
 var ES_globalObject = (function () {
-    var obj = new ES_Object();
+    var obj = new ES_Object({
+        __Extensible__ : true
+    });
 
     obj.__DefineOwnProperty__(
         "NaN",

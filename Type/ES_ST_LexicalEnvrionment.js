@@ -30,7 +30,7 @@ ES_ST_LexicalEnvironment.getIdentifierReference = function (lex, name, strict) {
  * @return {ES_ST_LexicalEnvironment}               新建的声明式词法环境
  */
 ES_ST_LexicalEnvironment.newDeclarativeEnvironment = function (outerlex) {
-    var envRec = new DeclarativeEnvironmentRecords();
+    var envRec = new ES_ST_DeclarativeEnvironmentRecords();
     return new ES_ST_LexicalEnvironment(envRec, outerlex);
 };
 
@@ -41,7 +41,7 @@ ES_ST_LexicalEnvironment.newDeclarativeEnvironment = function (outerlex) {
  * @return {ES_ST_LexicalEnvironment}            新建的对象式词法环境
  */
 ES_ST_LexicalEnvironment.newObjectEnvironment = function (o, outerlex) {
-    var envRec = new ObjectEnvironmentRecords(o);
+    var envRec = new ES_ST_ObjectEnvironmentRecords(o);
     return new ES_ST_LexicalEnvironment(envRec, outerlex);
 };
 

@@ -5,6 +5,7 @@
  * @param {[type]} o 指定对象
  */
 function ES_ST_ObjectEnvironmentRecords(o, isProvideThis) {
+    this._constructor = 'ES_ST_ObjectEnvironmentRecords';
     this.bindingObject = o;
     this.provideThis = isProvideThis;
 }
@@ -31,7 +32,7 @@ ES_ST_ObjectEnvironmentRecords.prototype = {
                     __Value__       : undefined,
                     __Writable__    : true,
                     __Enumerable__  : true,
-                    __Configurable__: canDelete
+                    __Configurable__: canDelete || false
                 }),
                 true
             );

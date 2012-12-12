@@ -12,11 +12,11 @@ var ES_Global = {
         return !!any;
     },
     toNumber : function (any) {
-
+        return Number(any);
     },
     toInteger : function (any) {
-
-    },
+        return window.parseInt(any);
+    }, 
     toInt32 : function (any) {
 
     },
@@ -27,7 +27,7 @@ var ES_Global = {
 
     },
     toString : function (any) {
-
+        return String(any);
     },
     toObject : function (any) {
         switch (ES_Global.type(any)) {
@@ -66,10 +66,39 @@ var ES_Global = {
     isCallable : function (any) {
 
     },
-    sameValue : function (a, b) {
-
+    sameValue : function (x, y) {
+        if (ES_Global.type(x) !== ES_Global.type(y)) {
+            return false;
+        }
+        if (ES_Global.type(x) === 'undefined') {
+            return true;
+        }
+        if (ES_Global.type(x) === 'null') {
+            return true;
+        }
+        if (ES_Global.type(x) === 'number') {
+            if (isNaN(x) && isNaN(y)) {
+                return true;
+            }
+            if (x === +0 && y === -0) {
+                return false;
+            }
+            if (x === -0 && y === +0) {
+                return false;
+            }
+            if (x === y) {
+                return true;
+            }
+            return false;
+        }
+        if (ES_Global.type(x) === 'string') {
+            return x == y;
+        }
+        if (ES_Global.type(x) === 'Boolean') {
+            return x === y;
+        }
+        return x === y;
     },
-
 
     isFormalParameterListopt : function () {
         return true;
@@ -78,7 +107,54 @@ var ES_Global = {
         return true;
     },
     isStrictCode : function (code) {
+        return code && code[1] && (code[1] === "'use strict'"); 
+    },
+    isFunctionCode : function (code) {
+        return code && code[0] && (code[0] === "funcCode"); 
+    },
+    isEvalCode : function (code) {
+        return code && code[0] && (code[0] === "eCode"); 
+    },
+    isFunctionDeclaration : function (code) {
         code = code || "";
-        return code.indexOf('strict') >= 0;
-    }
+        var m = code.match(/function\s([a-zA-Z0-9]*)\(([^\(\)]*)\)\s*\{(.*)\}/);
+        if (m) {
+            console.debug(m);
+            return {
+                'identifier' : m[1],
+                'funcBody' : m[3],
+                'args' : m[2]
+            };
+        }
+        return false;
+    },
+    isVariableDeclaration : function (code) {
+        code = code || "";
+        var m = code.match(/var\s*([a-zA-Z0-9]+)/);
+        if (m) {
+            return {
+                'identifier' : m[1]
+            }
+        }
+        return false;
+    },
+    isVariableDeclarationNoIn : function (code) {
+        code = code || "";
+        var m = code.match(/var\s*([a-zA-Z0-9]+)/);
+        if (m) {
+            return {
+                'identifier' : m[1]
+            }
+        }
+        return false;
+    },
+
+    isThrowCode : function (code) {
+        var code = code || "";
+        return code.indexOf('throw') >= 0;
+    },
+    isReturnCode : function (code) {
+        var code = code || "";
+        return code.indexOf('return') >= 0;
+    },
 };

@@ -5,6 +5,9 @@
  */
 function ES_Object(o) {
     o = o || {};
+    for (var p in o) {
+        this[p] = o[p];
+    }
 
     this._constructor = 'ES_LT_Object';
     /**

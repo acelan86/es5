@@ -12,8 +12,12 @@ var ES_control = (function () {
             ecStack.pop();
             runningEC = ecStack[ecStack.length - 1];
         },
-        excute : function (code) {
-            runningEC.excute(code);
+        execute : function (code) {
+            code = code || [];
+            console.debug(runningEC, code);
+            return {
+                type : code[code.length - 1]
+            };
         }
     };
 })();

@@ -90,7 +90,7 @@ var ES_PrimaryExpressions = {
     //11.1.5
     ObjectInitialiser : {
         "ObjectLiteral:{}" : function () {
-            return new ES_objectConstructor._new();
+            return ES_objectConstructor._new();
         },
         "ObjectLiteral:{PropertyNameAndValueList}" : function (PropertyNameAndValueList) {
             return ES_control.execute(PropertyNameAndValueList);

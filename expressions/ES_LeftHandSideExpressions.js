@@ -22,10 +22,10 @@ var ES_LeftHandSideExpressions = {
             if (ES_Global.type(constructor) !== 'ES_LT_Object') {
                 throw new TypeError();
             }
-            if (constructor.__Consturct__ === undefined) {
+            if (constructor.__Construct__ === undefined) {
                 throw new TypeError();
             }
-            return constructor._new(); //@todo, 这里需要再回顾一下构造器的内容
+            return constructor.__Construct__(); //@todo, 这里需要再回顾一下构造器的内容
         },
         "MemberExpression:new NewExpression Arguments" : function (NewExpression, Arguments) {
             var ref = ES_control.execute(NewExpression),
@@ -34,10 +34,10 @@ var ES_LeftHandSideExpressions = {
             if (ES_Global.type(constructor) !== 'ES_LT_Object') {
                 throw new TypeError();
             }
-            if (constructor.__Consturct__ === undefined) {
+            if (constructor.__Construct__ === undefined) {
                 throw new TypeError();
             }
-            return constructor._new(argList);
+            return constructor.__Construct__(argList);
         }
     },
     "FunctionCall" : {

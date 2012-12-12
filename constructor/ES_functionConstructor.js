@@ -148,19 +148,37 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
  * @param {[type]} pn   [description]
  * @param {[type]} body [description]
  */
-var ES_functionConstructor = (function () {
-    var fc = new ES_Object({
+var ES_function = (function () {
+    var f = new ES_Object({
         __Class__ : 'Function',
         __Prototype__ : ES_functionPrototype,
         __Extensible__ : true
     });
 
-    fc.prototype = ES_functionPrototype;
-    fc.length = 1;
+    f.__DefineOwnProperty__(
+        "es_prototype",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : ES_functionPrototype,
+            __Writable__ : true,
+            __Enumerable__ : true,
+            __Configurable__ : false
+        }),
+        false
+    );
+    f.__DefineOwnProperty__(
+        "es_length",
+        new ES_ST_PropertyDescriptor({
+            __Value__ : 1,
+            __Writable__ : false,
+            __Enumerable__ : false,
+            __Configurable__ : false
+        }),
+        false
+    );
 
-    //作为构造器使用
-    fc._new = function (/* p1, p2, ... pn, body */) {
-        var argCount = arguments.length;//参数总数， 包括body
+    //作为构造器使用 15.3.2
+    f.__Construct__ = function (argList) {
+        var argCount = argList.length;//参数总数， 包括body
         var p = '';
         if (argCount === 0) {
             var body = '';
@@ -194,10 +212,10 @@ var ES_functionConstructor = (function () {
         if (strict) {
             throw Error(); //13.1 todo
         }
-        //scope哪里来的？ 
+        //@todo scope哪里来的？ 
         var scope = scope || {};
         return new ES_createFunctionObject(p, body, scope, strict);
     };
 
-    return fc;
+    return f;
 })();

@@ -4,7 +4,7 @@
 function ES_ExecuteContext(lex, thiz) {
     this.lexicalEnvironment = lex;
     this.varEnvironment = lex;
-    this.thisArg = thiz;
+    this.thisBinding = thiz;
 }
 /**
  * 创建一个新的执行环境

@@ -27,9 +27,9 @@
         <script src="../Type/ES_ST_ObjectEnvironmentRecords.js"></script>
         <script src="../Type/ES_ST_LexicalEnvrionment.js"></script>
         <script src="../ES_Arguments.js"></script>
+        <script src="../ES_GlobalObject.js"></script>
         <script src="../ES_ExecuteContext.js"></script>
         <script src="../ES_globalEC.js"></script>
-        <script src="../ES_GlobalObject.js"></script>
 
         <script src="../ES_throwTypeError.js"></script>
 
@@ -246,13 +246,13 @@
                 ES_declarationBindingInstantiation(ES_globalEC, globalCode, ES_Global.isStrictCode(globalCode), null);
 
 
-                var funcObj = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, 'a', true), 'a');
+                var funcObj = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, 'a', true));
 
                 funcObj.__Code__ = funcCode;
 
                 //进入函数代码
                 //a(2, 3);
-                funcObj.__Call__(ES_globalEC.thisArg, [2, 3]);
+                funcObj.__Call__(ES_globalEC.thisBinding, [2, 3]);
 
 
             });

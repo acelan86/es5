@@ -26,8 +26,8 @@ ES5.1
     * 执行环境栈ecStack
     * 当前活动的执行环境runningEC
     * 抽象了如下几个方法
-        ** enter(ec)进入执行环境ec
-        ** execute(code) 使用当前活动的执行环境解释执行code
-        ** quit() 退出当前执行环境
+        *  enter(ec)进入执行环境ec
+        *  execute(code) 使用当前活动的执行环境解释执行code
+        *  quit() 退出当前执行环境
         
     ＊ 代码中以该对象来描述解释执行代码

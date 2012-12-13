@@ -1,0 +1,8 @@
+/**
+ * 条件运算符
+ */
+var ES_ConditionalOperator = {
+	"ConditionalExpression:LogicalORExpression?AssignmentExpression:AssignmentExpression" : function () {
+		
+	}
+};

@@ -16,5 +16,18 @@ ES5.1
 4. constructor/.. 构造器目录，存放了new表达式执行构造一个任何对象时候执行的步骤，返回一个对象
 5. prototype/..   原型目录，存放了ecma原生的原型对象，如Object.prototype, Function.prototype
 6. Type/...  类型目录， 存放了ecma定义的数据类型和规范类型的定义，包括Undefined, Null, String, Number, Boolean, Object数据类型和Completion，Reference等规范类型
-7. ES_GlobalObject 唯一全局对象的定义，包含了全局对象属性及方法的定义
+7. ES_globalObject 唯一全局对象的定义，包含了全局对象属性及方法的定义
 8. ES_ExecuteContext 执行上下文相关方法定义
+
+
+关键
+==
+1. ES_control可以认为是解释执行的全局控制对象，包含ES描述的如下内容：
+    1.1 执行环境栈ecStack
+    1.2 当前活动的执行环境runningEC
+    1.3 抽象了如下几个方法
+        1.3.1 enter(ec)进入执行环境ec
+        1.3.2 execute(code) 使用当前活动的执行环境解释执行code
+        1.3.3 quit() 退出当前执行环境
+        
+    ＊ 代码中以该对象来描述解释执行代码

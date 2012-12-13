@@ -3,6 +3,7 @@
  * @type {Object}
  */
 var ES_FunctionDefinition = {
+    //函数声明
     "FunctionDeclaration:function Identifier(FormalParameterList_opt){FunctionBody}" : function (Identifier, FormalParameterList, FunctionBody) {
         return ES_createFunctionObject(
             FormalParameterList,
@@ -19,6 +20,7 @@ var ES_FunctionDefinition = {
             ES_control.runningEC.isStrict || ES_Global.isStrictFunction(FunctionBody)
         );
     },
+    //函数表达式
     "FunctionExpression:function Identifier_opt(FormalParameterList_opt){FunctionBody}" : function (Identifier, FormalParameterList, FunctionBody) {
         var funcEnv = ES_ST_LexicalEnvironment.newDeclarativeEnvironment(ES_control.runningEC.lexicalEnvironment),
             envRec = funcEnv.enviromentRecords;

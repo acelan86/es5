@@ -17,9 +17,13 @@ var ES_control = (function () {
             //代表一种表达式执行方案
             function executeExpression (runningEC, expression) {
                 var type = 'return|throw|normal',
-                    r = {/*执行结果*/},
-                    other = {/*其他附加*/};
-                return [type, r, other];
+                    value = {/*执行结果*/},
+                    target = {/*其他附加*/};
+                return {
+                    type : type,
+                    value : value,
+                    target : target
+                };
             }
             return executeExpression(runningEC, expression);
         }

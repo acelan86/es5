@@ -1,5 +1,5 @@
 /**
- * Object构造器
+ * 创建一个空对象的方法
  * @param {[type]} value [description]
  */
 var ES_createNullObject = function () {
@@ -9,13 +9,15 @@ var ES_createNullObject = function () {
         __Extensible__ : true
     });
 };
-
-var ES_object = (function () {
-    var o = new ES_Object({
+/**
+ * 标准Object内置构造器
+ */
+var ES_objectConstructor = (function () {
+    var oc = new ES_Object({
         __Prototype__ : ES_functionPrototype
     });
 
-    //作为构造器使用
+    //作为构造器使用 new Object
     oc.__Construct__ = function (value) {
         //提供了value
         if ('undefined' !== typeof value) {
@@ -42,16 +44,16 @@ var ES_object = (function () {
         }
     };
 
-    o.length = 1;
-    o.prototype = ES_objectPrototype;
-    o.getPrototypeOf = function (o) {
+    oc.length = 1;
+    oc.prototype = ES_objectPrototype;
+    oc.getPrototypeOf = function (o) {
         if (ES_Global.type(o) !== ES_LT_Object) {
             throw new TypeError();
         }
         return o.__Prototype__;
     };
 
-    o.getOwnPropertyDescriptor = function (o, p) {
+    oc.getOwnPropertyDescriptor = function (o, p) {
         if (ES_Global.type(o) !== ES_LT_Object) {
             throw new TypeError();
         }
@@ -60,50 +62,50 @@ var ES_object = (function () {
         return fromPropertyDescriptor(desc); //这个方法在哪？
     };
 
-    o.getOwnPropertyNames = function (o) {
+    oc.getOwnPropertyNames = function (o) {
 
     };
 
-    o.create = function (o, properties) {
+    oc.create = function (o, properties) {
 
     };
 
-    o.defineProperty = function (o, p, attribute) {
+    oc.defineProperty = function (o, p, attribute) {
 
     };
 
-    o.defineProperties = function (o, properties) {
+    oc.defineProperties = function (o, properties) {
 
     };
 
-    o.seal = function (o) {
+    oc.seal = function (o) {
 
     };
 
-    o.freeze = function (o) {
+    oc.freeze = function (o) {
 
     };
 
-    o.preventExtensions = function (o) {
+    oc.preventExtensions = function (o) {
 
     };
 
-    o.isSealed = function (o) {
+    oc.isSealed = function (o) {
 
     };
 
-    o.isFrozen = function (o) {
+    oc.isFrozen = function (o) {
 
     };
 
-    o.isExtensible = function (o) {
+    oc.isExtensible = function (o) {
 
     };
 
-    o.keys = function (o) {
+    oc.keys = function (o) {
 
     };
 
-    return o;
+    return oc;
 })();
 

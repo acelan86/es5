@@ -59,7 +59,7 @@
 
             var genericDesc = new ES_ST_PropertyDescriptor({});
 
-            var newObj = ES_objectConstructor._new(),
+            var newObj = ES_objectConstructor.__Construct__(),
                 dataObj,
                 accessorObj,
                 genericObj;
@@ -140,7 +140,7 @@
 
 
             test('ES_Object', function () {
-                var obj = ES_objectConstructor._new(),
+                var obj = ES_objectConstructor.__Construct__(),
                     op = oOwnProperty;
                     p = op.concat(opOwnProperty);
                 strictEqual(obj.__Class__, "Object", "obj.__Class__ is 'Object'");
@@ -155,7 +155,7 @@
             });
 
             test('ES_Function', function () {
-                var fo = ES_functionConstructor._new(),
+                var fo = ES_functionConstructor.__Construct__(),
                     op = fOwnProperty,
                     p = op.concat(fpOwnProperty).concat(opOwnProperty);
                 strictEqual(fo.__Class__, "Function", "fo.__Class__ is 'Function'");
@@ -177,7 +177,7 @@
 
             test('ES_ST_Reference.getValue', function () {
                 var primitiveRef = new ES_ST_Reference(1, 'primitiveRef', true),
-                    obj = ES_objectConstructor._new(),
+                    obj = ES_objectConstructor.__Construct__(),
                     num = ES_numberConstructor._new(1),
                     envRec = new ES_ST_DeclarativeEnvironmentRecords(),
                     oenvRec = new ES_ST_ObjectEnvironmentRecords(obj), 

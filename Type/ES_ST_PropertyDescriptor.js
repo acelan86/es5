@@ -69,7 +69,7 @@ ES_ST_PropertyDescriptor.fromPropertyDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
-    var obj = ES_objectConstructor._new();
+    var obj = ES_objectConstructor.__Construct__();
     if (ES_ST_PropertyDescriptor.isDataDescriptor(desc)) {
         obj.__DefineOwnProperty__(
             "value",

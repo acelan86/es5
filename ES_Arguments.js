@@ -27,7 +27,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
         false
     );
 
-    var map = object._new(),
+    var map = object.__Construct__(),
         mappedNames = [], //模拟一个List
         indx = len - 1;
     while (indx >= 0) {

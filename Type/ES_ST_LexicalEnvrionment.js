@@ -4,8 +4,6 @@
 function ES_ST_LexicalEnvironment(envRec, outerLex) {
     this.environmentRecords = envRec;
     this.outerLexicalEnvironment = outerLex;
-    this.proviedThis = false;
-    //with语句中还有this.proviedThis = true;
 }
 
 /**

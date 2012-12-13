@@ -61,10 +61,27 @@ var ES_Global = {
         return ('object' === type ? (any._constructor || "ES_LT_Object") : type);
     },
     checkObjectCoercible : function (any) {
-
+        var type = ES_Global.type(any);
+        switch (type) {
+            case 'undefined' :
+            case 'null' :
+                throw new TypeError();
+            case 'boolean' :
+            case 'number' :
+            case 'string' :
+            case 'ES_LT_Object' : 
+            default : 
+                break;
+        }
+        return;
     },
     isCallable : function (any) {
-
+        var type = ES_Global.type(any),
+            r = false;
+        if (type === 'ES_LT_Object' && 'undefined' !== any.__Call__) {
+            r = true;
+        }
+        return r;
     },
     sameValue : function (x, y) {
         if (ES_Global.type(x) !== ES_Global.type(y)) {
@@ -149,12 +166,10 @@ var ES_Global = {
         return false;
     },
 
-    isThrowCode : function (code) {
-        var code = code || "";
-        return code.indexOf('throw') >= 0;
+    isThrowCode : function (type) {
+        return type === 'throw';
     },
-    isReturnCode : function (code) {
-        var code = code || "";
-        return code.indexOf('return') >= 0;
+    isReturnCode : function (type) {
+        return type === 'return';
     },
 };

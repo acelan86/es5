@@ -13,6 +13,8 @@
         <h2 id="qunit-userAgent"></h2>
         <ol id="qunit-tests"></ol>
 
+        <script src="../ES_Helper.js"></script>
+
         <script src="../ES_Global.js"></script>
         <script src="../Type/ES_ST_PropertyDescriptor.js"></script>
         <script src="../ES_Object.js"></script>
@@ -27,236 +29,257 @@
         <script src="../Type/ES_ST_ObjectEnvironmentRecords.js"></script>
         <script src="../Type/ES_ST_LexicalEnvrionment.js"></script>
         <script src="../ES_Arguments.js"></script>
-        <script src="../ES_GlobalObject.js"></script>
-        <script src="../ES_ExecuteContext.js"></script>
-        <script src="../ES_globalEC.js"></script>
-
-        <script src="../ES_throwTypeError.js"></script>
 
         <script src="../constructor/ES_functionConstructor.js"></script>
         <script src="../constructor/ES_booleanConstructor.js"></script>
         <script src="../constructor/ES_numberConstructor.js"></script>
         <script src="../constructor/ES_stringConstructor.js"></script>
 
+        <script src="../ES_GlobalObject.js"></script>
+        <script src="../ES_ExecuteContext.js"></script>
+        <script src="../ES_globalEC.js"></script>
+
+        <script src="../ES_throwTypeError.js"></script>
+
         <script src="../Type/ES_ST_Reference.js"></script>
 
         <script src="../ES_control.js"></script>
 
         <script>
-            var dataDesc = new ES_ST_PropertyDescriptor({
-                __Value__ : 1,
-                __Writable__ : true,
-                __Enumerable__ : true,
-                __Configurable__ : true
-            });
+            // var dataDesc = new ES_ST_PropertyDescriptor({
+            //     __Value__ : 1,
+            //     __Writable__ : true,
+            //     __Enumerable__ : true,
+            //     __Configurable__ : true
+            // });
 
-            var accessorDesc = new ES_ST_PropertyDescriptor({
-                __Get__ : function () {},
-                __Set__ : function () {},
-                __Enumerable__ : true,
-                __Configurable__ : true
-            });
+            // var accessorDesc = new ES_ST_PropertyDescriptor({
+            //     __Get__ : function () {},
+            //     __Set__ : function () {},
+            //     __Enumerable__ : true,
+            //     __Configurable__ : true
+            // });
 
-            var genericDesc = new ES_ST_PropertyDescriptor({});
+            // var genericDesc = new ES_ST_PropertyDescriptor({});
 
-            var newObj = ES_objectConstructor.__Construct__(),
-                dataObj,
-                accessorObj,
-                genericObj;
+            // var newObj = ES_objectConstructor.__Construct__(),
+            //     dataObj,
+            //     accessorObj,
+            //     genericObj;
 
-            test('ES_ST_PropertyDescriptor.isAccessorDescriptor', function () {
-                ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(undefined), 'undefined is not accessorDescriptor');
-                ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(dataDesc), 'dataDesc is not accessorDescriptor');
-                ok(ES_ST_PropertyDescriptor.isAccessorDescriptor(accessorDesc), 'accessorDesc is accessorDescriptor');
-                ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(genericDesc), 'genericDesc is not accessorDescriptor');
-            });
-            test('ES_ST_PropertyDescriptor.isDataDescriptor', function () {
-                ok(!ES_ST_PropertyDescriptor.isDataDescriptor(undefined), 'undefined is not dataDescriptor');
-                ok(ES_ST_PropertyDescriptor.isDataDescriptor(dataDesc), 'dataDesc is dataDescriptor');
-                ok(!ES_ST_PropertyDescriptor.isDataDescriptor(accessorDesc), 'accessorDesc is not dataDescriptor');
-                ok(!ES_ST_PropertyDescriptor.isDataDescriptor(genericDesc), 'genericDesc is not dataDescriptor');
-            });
-            test('ES_ST_PropertyDescriptor.isGenericDescriptor', function () {
-                ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(undefined), 'undefined is not genericDescriptor');
-                ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(dataDesc), 'dataDesc is not genericDescriptor');
-                ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(accessorDesc), 'accessorDesc is not genericDescriptor');
-                ok(ES_ST_PropertyDescriptor.isGenericDescriptor(genericDesc), 'genericDesc is genericDescriptor');
-            });
+            // test('ES_ST_PropertyDescriptor.isAccessorDescriptor', function () {
+            //     ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(undefined), 'undefined is not accessorDescriptor');
+            //     ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(dataDesc), 'dataDesc is not accessorDescriptor');
+            //     ok(ES_ST_PropertyDescriptor.isAccessorDescriptor(accessorDesc), 'accessorDesc is accessorDescriptor');
+            //     ok(!ES_ST_PropertyDescriptor.isAccessorDescriptor(genericDesc), 'genericDesc is not accessorDescriptor');
+            // });
+            // test('ES_ST_PropertyDescriptor.isDataDescriptor', function () {
+            //     ok(!ES_ST_PropertyDescriptor.isDataDescriptor(undefined), 'undefined is not dataDescriptor');
+            //     ok(ES_ST_PropertyDescriptor.isDataDescriptor(dataDesc), 'dataDesc is dataDescriptor');
+            //     ok(!ES_ST_PropertyDescriptor.isDataDescriptor(accessorDesc), 'accessorDesc is not dataDescriptor');
+            //     ok(!ES_ST_PropertyDescriptor.isDataDescriptor(genericDesc), 'genericDesc is not dataDescriptor');
+            // });
+            // test('ES_ST_PropertyDescriptor.isGenericDescriptor', function () {
+            //     ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(undefined), 'undefined is not genericDescriptor');
+            //     ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(dataDesc), 'dataDesc is not genericDescriptor');
+            //     ok(!ES_ST_PropertyDescriptor.isGenericDescriptor(accessorDesc), 'accessorDesc is not genericDescriptor');
+            //     ok(ES_ST_PropertyDescriptor.isGenericDescriptor(genericDesc), 'genericDesc is genericDescriptor');
+            // });
 
-            test('ES_ST_PropertyDescriptor.fromPropertyDescriptor', function () {
-                var _obj;
-                ok(dataObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(dataDesc), 'dataDesc to object');
-                console.debug(_obj);
-                ok(accessorObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(accessorDesc), 'accessorDesc to object');
-                console.debug(_obj);
-                ok(genericObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(genericDesc), 'genericDesc to object');
-                console.debug(_obj);
-            });
+            // test('ES_ST_PropertyDescriptor.fromPropertyDescriptor', function () {
+            //     var _obj;
+            //     ok(dataObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(dataDesc), 'dataDesc to object');
+            //     console.debug(_obj);
+            //     ok(accessorObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(accessorDesc), 'accessorDesc to object');
+            //     console.debug(_obj);
+            //     ok(genericObj = _obj = ES_ST_PropertyDescriptor.fromPropertyDescriptor(genericDesc), 'genericDesc to object');
+            //     console.debug(_obj);
+            // });
 
-            test('ES_ST_PropertyDescriptor.toPropertyDescriptor', function () {
-                var _desc;
-                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(newObj), 'newObj to desc');
-                console.debug(_desc);
-                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(dataObj), 'dataObj to dataDesc');
-                console.debug(_desc);
-                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(accessorObj), 'accessorObj to accessorDesc');
-                console.debug(_desc);
-                ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(genericObj), 'genericObj to genericDesc');
-                console.debug(_desc);
-            });
-
-
-            var opOwnProperty = ["es_constructor", "es_valueOf", "es_toString", "es_hasOwnProperty", "es_toLocalString", "es_isPrototypeOf", "es_propertyIsEnumerable"],
-                fpOwnProperty = ["es_constructor", "es_toString", "es_length", "es_apply"],
-                oOwnProperty = [],
-                fOwnProperty = [];
-
-            test('ES_objectPrototype', function () {
-                var obj = ES_objectPrototype,
-                    op = opOwnProperty;
-                strictEqual(obj.__Class__, "Object", "objprototype.__Class__ is 'Object'");
-                strictEqual(obj.__Prototype__, null, "objprototype.__Prototype__ is null");
-                for (var i = 0, len = op.length; i < len; i++) {
-                    notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is objprototype's ownproperty");
-                    console.debug(obj.__Get__(op[i]));
-                }
-            });
-
-            test('ES_functionPrototype', function () {
-                var obj = ES_functionPrototype,
-                    op = fpOwnProperty,
-                    p = op.concat(opOwnProperty);
-
-                strictEqual(obj.__Class__, "Function", "fucprototype.__Class__ is 'Object'");
-                strictEqual(obj.__Prototype__, ES_objectPrototype, "funcprototype.__Prototype__ is objprototype");
-
-                for (var i = 0, len = op.length; i < len; i++) {
-                    notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is funcprototype's ownproperty");
-                }
-                for (var i = 0, len = p.length; i < len; i++) {
-                    strictEqual(obj.__HasProperty__(p[i]), true, p[i] + " is funcprototype's property");
-                }
-            });
+            // test('ES_ST_PropertyDescriptor.toPropertyDescriptor', function () {
+            //     var _desc;
+            //     ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(newObj), 'newObj to desc');
+            //     console.debug(_desc);
+            //     ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(dataObj), 'dataObj to dataDesc');
+            //     console.debug(_desc);
+            //     ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(accessorObj), 'accessorObj to accessorDesc');
+            //     console.debug(_desc);
+            //     ok(_desc = ES_ST_PropertyDescriptor.toPropertyDescriptor(genericObj), 'genericObj to genericDesc');
+            //     console.debug(_desc);
+            // });
 
 
-            test('ES_Object', function () {
-                var obj = ES_objectConstructor.__Construct__(),
-                    op = oOwnProperty;
-                    p = op.concat(opOwnProperty);
-                strictEqual(obj.__Class__, "Object", "obj.__Class__ is 'Object'");
-                strictEqual(obj.__Prototype__, ES_objectPrototype, "obj.__Prototype__ is ES_objectPrototype");
+            // var opOwnProperty = ["es_constructor", "es_valueOf", "es_toString", "es_hasOwnProperty", "es_toLocalString", "es_isPrototypeOf", "es_propertyIsEnumerable"],
+            //     fpOwnProperty = ["es_constructor", "es_toString", "es_length", "es_apply"],
+            //     oOwnProperty = [],
+            //     fOwnProperty = [];
 
-                for (var i = 0, len = op.length; i < len; i++) {
-                    notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is object's ownproperty");
-                }
-                for (var i = 0, len = p.length; i < len; i++) {
-                    strictEqual(obj.__HasProperty__(p[i]), true, p[i] + " is object's property");
-                }
-            });
+            // test('ES_objectPrototype', function () {
+            //     var obj = ES_objectPrototype,
+            //         op = opOwnProperty;
+            //     strictEqual(obj.__Class__, "Object", "objprototype.__Class__ is 'Object'");
+            //     strictEqual(obj.__Prototype__, null, "objprototype.__Prototype__ is null");
+            //     for (var i = 0, len = op.length; i < len; i++) {
+            //         notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is objprototype's ownproperty");
+            //         console.debug(obj.__Get__(op[i]));
+            //     }
+            // });
 
-            test('ES_Function', function () {
-                var fo = ES_functionConstructor.__Construct__(),
-                    op = fOwnProperty,
-                    p = op.concat(fpOwnProperty).concat(opOwnProperty);
-                strictEqual(fo.__Class__, "Function", "fo.__Class__ is 'Function'");
-                strictEqual(fo.__Prototype__, ES_functionPrototype, "fo.__Prototype__ is ES_functionPrototype");
-                for (var i = 0, len = op.length; i < len; i++) {
-                    notStrictEqual(fo.__GetOwnProperty__(op[i]), undefined, op[i] + " is function's ownproperty");
-                }
-                for (var i = 0, len = p.length; i < len; i++) {
-                    strictEqual(fo.__HasProperty__(p[i]), true, p[i] + " is function's property");
-                }
-            });
+            // test('ES_functionPrototype', function () {
+            //     var obj = ES_functionPrototype,
+            //         op = fpOwnProperty,
+            //         p = op.concat(opOwnProperty);
 
+            //     strictEqual(obj.__Class__, "Function", "fucprototype.__Class__ is 'Object'");
+            //     strictEqual(obj.__Prototype__, ES_objectPrototype, "funcprototype.__Prototype__ is objprototype");
 
-
-            /**
-             * 引用类型测试
-             */
+            //     for (var i = 0, len = op.length; i < len; i++) {
+            //         notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is funcprototype's ownproperty");
+            //     }
+            //     for (var i = 0, len = p.length; i < len; i++) {
+            //         strictEqual(obj.__HasProperty__(p[i]), true, p[i] + " is funcprototype's property");
+            //     }
+            // });
 
 
-            test('ES_ST_Reference.getValue', function () {
-                var primitiveRef = new ES_ST_Reference(1, 'primitiveRef', true),
-                    obj = ES_objectConstructor.__Construct__(),
-                    num = ES_numberConstructor._new(1),
-                    envRec = new ES_ST_DeclarativeEnvironmentRecords(),
-                    oenvRec = new ES_ST_ObjectEnvironmentRecords(obj), 
-                    numRef,
-                    objRef,
-                    envRecRef,
-                    oenvRecRef;
+            // test('ES_Object', function () {
+            //     var obj = ES_objectConstructor.__Construct__(),
+            //         op = oOwnProperty;
+            //         p = op.concat(opOwnProperty);
+            //     strictEqual(obj.__Class__, "Object", "obj.__Class__ is 'Object'");
+            //     strictEqual(obj.__Prototype__, ES_objectPrototype, "obj.__Prototype__ is ES_objectPrototype");
 
-                    obj.__DefineOwnProperty__(
-                        "objRef",
-                        new ES_ST_PropertyDescriptor({
-                            __Value__ : "obj"
-                        }),
-                        false
-                    );
+            //     for (var i = 0, len = op.length; i < len; i++) {
+            //         notStrictEqual(obj.__GetOwnProperty__(op[i]), undefined, op[i] + " is object's ownproperty");
+            //     }
+            //     for (var i = 0, len = p.length; i < len; i++) {
+            //         strictEqual(obj.__HasProperty__(p[i]), true, p[i] + " is object's property");
+            //     }
+            // });
 
-                    envRec.createMutableBinding('envRecRef', true);
-                    envRec.setMutableBinding('envRecRef', 1, true);
-
-                    envRec.createMutableBinding('oenvRecRef', true);
-                    envRec.setMutableBinding('oenvRecRef', 1, true);
-
-                    objRef = new ES_ST_Reference(obj, 'objRef', true);
-                    numRef = new ES_ST_Reference(num, 'numRef', true);
-                    envRecRef = new ES_ST_Reference(envRec, 'envRecRef', true);
-                    oenvRecRef = new ES_ST_Reference(oenvRec, 'objRef', true);
-
-                strictEqual(ES_ST_Reference.getValue(primitiveRef), 1, 'primitiveRef.value is 1');
-                strictEqual(ES_ST_Reference.getValue(objRef), "obj", "objRef.value is 'obj'");
-                strictEqual(ES_ST_Reference.getValue(numRef), 1, "numRef.value is 1");
-                strictEqual(ES_ST_Reference.getValue(envRecRef), 1, "envRecRef.value is 1");
-                strictEqual(ES_ST_Reference.getValue(oenvRecRef), 'obj', "oenvRecRef.value is 1");
-            });
+            // test('ES_Function', function () {
+            //     var fo = ES_functionConstructor.__Construct__(),
+            //         op = fOwnProperty,
+            //         p = op.concat(fpOwnProperty).concat(opOwnProperty);
+            //     strictEqual(fo.__Class__, "Function", "fo.__Class__ is 'Function'");
+            //     strictEqual(fo.__Prototype__, ES_functionPrototype, "fo.__Prototype__ is ES_functionPrototype");
+            //     for (var i = 0, len = op.length; i < len; i++) {
+            //         notStrictEqual(fo.__GetOwnProperty__(op[i]), undefined, op[i] + " is function's ownproperty");
+            //     }
+            //     for (var i = 0, len = p.length; i < len; i++) {
+            //         strictEqual(fo.__HasProperty__(p[i]), true, p[i] + " is function's property");
+            //     }
+            // });
 
 
-            test('ES_ST_Reference.putValue', function () {
-                var numRef = new ES_ST_Reference(undefined, 'num', false);
-                strictEqual(ES_ST_Reference.putValue(numRef, 1), 1, 'num = 1');
-                strictEqual(ES_ST_Reference.getValue(numRef), undefined, 'numRef.value = 1');
-            });
+
+            // /**
+            //  * 引用类型测试
+            //  */
 
 
-            /**
-             * 测试全局代码与局部代码
-             */
-            test('ES_control', function () {
-                var globalCode = [
-                    "globalCode",
-                    "'use strict'",
-                    "var a=1",
-                    "var x=1",
-                    "function a(b,c){}",
-                    "function b(a,d){}"
-                ];
+            // test('ES_ST_Reference.getValue', function () {
+            //     var primitiveRef = new ES_ST_Reference(1, 'primitiveRef', true),
+            //         obj = ES_objectConstructor.__Construct__(),
+            //         num = ES_numberConstructor._new(1),
+            //         envRec = new ES_ST_DeclarativeEnvironmentRecords(),
+            //         oenvRec = new ES_ST_ObjectEnvironmentRecords(obj), 
+            //         numRef,
+            //         objRef,
+            //         envRecRef,
+            //         oenvRecRef;
 
-                // 例如下面是全局函数a的funcBody
-                var funcCode = [
-                    "funcCode",
-                    "'use strict'",
-                    "var b=1",
-                    "var x=1",
-                    "function a(b,c){}"
-                ];
+            //         obj.__DefineOwnProperty__(
+            //             "objRef",
+            //             new ES_ST_PropertyDescriptor({
+            //                 __Value__ : "obj"
+            //             }),
+            //             false
+            //         );
 
-                //进入全局代码
-                ES_declarationBindingInstantiation(ES_globalEC, globalCode, ES_Global.isStrictCode(globalCode), null);
+            //         envRec.createMutableBinding('envRecRef', true);
+            //         envRec.setMutableBinding('envRecRef', 1, true);
+
+            //         envRec.createMutableBinding('oenvRecRef', true);
+            //         envRec.setMutableBinding('oenvRecRef', 1, true);
+
+            //         objRef = new ES_ST_Reference(obj, 'objRef', true);
+            //         numRef = new ES_ST_Reference(num, 'numRef', true);
+            //         envRecRef = new ES_ST_Reference(envRec, 'envRecRef', true);
+            //         oenvRecRef = new ES_ST_Reference(oenvRec, 'objRef', true);
+
+            //     strictEqual(ES_ST_Reference.getValue(primitiveRef), 1, 'primitiveRef.value is 1');
+            //     strictEqual(ES_ST_Reference.getValue(objRef), "obj", "objRef.value is 'obj'");
+            //     strictEqual(ES_ST_Reference.getValue(numRef), 1, "numRef.value is 1");
+            //     strictEqual(ES_ST_Reference.getValue(envRecRef), 1, "envRecRef.value is 1");
+            //     strictEqual(ES_ST_Reference.getValue(oenvRecRef), 'obj', "oenvRecRef.value is 1");
+            // });
 
 
-                var funcObj = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, 'a', true));
-
-                funcObj.__Code__ = funcCode;
-
-                //进入函数代码
-                //a(2, 3);
-                funcObj.__Call__(ES_globalEC.thisBinding, [2, 3]);
+            // test('ES_ST_Reference.putValue', function () {
+            //     var numRef = new ES_ST_Reference(undefined, 'num', false);
+            //     strictEqual(ES_ST_Reference.putValue(numRef, 1), 1, 'num = 1');
+            //     strictEqual(ES_ST_Reference.getValue(numRef), undefined, 'numRef.value = 1');
+            // });
 
 
-            });
+            // /**
+            //  * 测试全局代码与局部代码
+            //  */
+            // test('ES_control', function () {
+            //     var globalCode = [
+            //         "globalCode",
+            //         "'use strict'",
+            //         "var a=1",
+            //         "var x=1",
+            //         "function a(b,c){}",
+            //         "function b(a,d){}"
+            //     ];
+
+            //     // 例如下面是全局函数a的funcBody
+            //     var funcCode = [
+            //         "funcCode",
+            //         "'use strict'",
+            //         "var b=1",
+            //         "var x=1",
+            //         "function a(b,c){}"
+            //     ];
+
+            //     //进入全局代码
+            //     ES_declarationBindingInstantiation(ES_globalEC, globalCode, ES_Global.isStrictCode(globalCode), null);
+
+
+            //     var funcObj = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, 'a', true));
+
+            //     funcObj.__Code__ = funcCode;
+
+            //     //进入函数代码
+            //     //a(2, 3);
+            //     funcObj.__Call__(ES_globalEC.thisBinding, [2, 3]);
+
+
+            // });
             
+
+            /* 测试获取全局对象 */
+            test("window", function () {
+                var gloLex = ES_control.runningEC.lexicalEnvironment,
+                    ps = ['Undefined', 'NaN', 'Infinity', 'eval', 'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'decodeURI', 'decodeURIComponent', 'encodeURI', 'encodeURIComponent', 'Object', 'Function', 'Array', 'String', 'Boolean', 'Number', 'Date', 'RegExp', 'Math', 'JSON'],
+                    i = 0,
+                    p;
+                function getGloProp(name) {
+                    return ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(gloLex, name));
+                }
+                while (p = ps[i++]) {
+                    var b = true;
+                    try {
+                        getGloProp(p);
+                    } catch (e) {
+                        b = false;
+                    }
+                    equal(b, true, "window." + p);
+                }
+            })
 
         </script>
     </body>

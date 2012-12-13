@@ -13,12 +13,18 @@ var ES_createNullObject = function () {
  * 标准Object内置构造器
  */
 var ES_objectConstructor = (function () {
-    var oc = new ES_Object({
+    var o = new ES_Object({
         __Prototype__ : ES_functionPrototype
     });
 
+    o.__Call__ = function (value) {
+        if (value === undefined || value === null) {
+            return o.__Construct__(value);
+        }
+        return ES_Global.toObject(value);
+    };
     //作为构造器使用 new Object
-    oc.__Construct__ = function (value) {
+    o.__Construct__ = function (value) {
         //提供了value
         if ('undefined' !== typeof value) {
             var obj;
@@ -44,68 +50,36 @@ var ES_objectConstructor = (function () {
         }
     };
 
-    oc.length = 1;
-    oc.prototype = ES_objectPrototype;
-    oc.getPrototypeOf = function (o) {
-        if (ES_Global.type(o) !== ES_LT_Object) {
-            throw new TypeError();
-        }
-        return o.__Prototype__;
-    };
+    ES_Helper._initOwnProperty(o, {
+        "length" : 1,
+        "prototype" : ES_objectPrototype,
+        "getPrototypeOf" : function (o) {
+            if (ES_Global.type(o) !== ES_LT_Object) {
+                throw new TypeError();
+            }
+            return o.__Prototype__;
+        },
+        "getOwnPropertyDescriptor" : function (o, p) {
+            if (ES_Global.type(o) !== ES_LT_Object) {
+                throw new TypeError();
+            }
+            var name = ES_Global.toString(p),
+                desc = o.__GetOwnProperty__(name);
+            return fromPropertyDescriptor(desc); //这个方法在哪？
+        },
+        "getOwnPropertyNames" : function (o) {},
+        "create" : function (o, properties) {},
+        "defineProperty" : function (o, p, attribute) {},
+        "defineProperties" : function (o, properties) {},
+        "seal" : function (o) {},
+        "freeze" : function (o) {},
+        "preventExtensions" : function (o) {},
+        "isSealed" : function (o) {},
+        "isFrozen" : function (o) {},
+        "isExtensible" : function (o) {},
+        "keys" : function (o) {}
+    });
 
-    oc.getOwnPropertyDescriptor = function (o, p) {
-        if (ES_Global.type(o) !== ES_LT_Object) {
-            throw new TypeError();
-        }
-        var name = ES_Global.toString(p),
-            desc = o.__GetOwnProperty__(name);
-        return fromPropertyDescriptor(desc); //这个方法在哪？
-    };
-
-    oc.getOwnPropertyNames = function (o) {
-
-    };
-
-    oc.create = function (o, properties) {
-
-    };
-
-    oc.defineProperty = function (o, p, attribute) {
-
-    };
-
-    oc.defineProperties = function (o, properties) {
-
-    };
-
-    oc.seal = function (o) {
-
-    };
-
-    oc.freeze = function (o) {
-
-    };
-
-    oc.preventExtensions = function (o) {
-
-    };
-
-    oc.isSealed = function (o) {
-
-    };
-
-    oc.isFrozen = function (o) {
-
-    };
-
-    oc.isExtensible = function (o) {
-
-    };
-
-    oc.keys = function (o) {
-
-    };
-
-    return oc;
+    return o;
 })();
 

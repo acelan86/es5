@@ -23,6 +23,7 @@ function ES_Object(o) {
 }
 
 ES_Object.prototype = {
+    //8.12
     /**
      * 返回命名属性的值
      * @param  {String} propertyName 属性名

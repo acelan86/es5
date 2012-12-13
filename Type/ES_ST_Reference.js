@@ -37,7 +37,7 @@ ES_ST_Reference.getValue = function (ref) {
     var base = ref.getBase();
     //base === undefined;
     if (ref.isUnresolvableReference()) {
-        return new ReferenceError();
+        throw new ReferenceError();
     } 
     //base !== envrionmentRecords;
     if (ref.isPropertyReference()) {

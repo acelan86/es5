@@ -2,7 +2,14 @@
  * 创建函数对象的算法13.2
  */
 function ES_createFunctionObject(formalParameterList, functionBody, scope, strict) {
-    var f = new ES_Object();
+    var f = new ES_Object({
+        __Class__ : 'Function',
+        __Prototype__ : ES_functionPrototype,
+        __Extensible__ : true,
+        __Scope__ : scope,
+        __FormalParameters__ : formalParameterList,
+        __Code__ : functionBody
+    });
 
     f.__Class__ = 'Function';
     f.__Prototype__ = ES_functionPrototype;
@@ -69,56 +76,38 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         }
     };
 
-    f.__Scope__ = scope;
 
-    var names = formalParameterList; //ES_ST_List类型
-    f.__FormalParameters__ = names;
+    ES_Helper._initOwnProperty(f, {
+        "length" : formalParameterList.length || 0
+    }, {
+        __Writable__ : false,
+        __Enumerable__ : false,
+        __Configurable__ : false
+    });
 
-    f.__Code__ = functionBody;
 
-    f.__Extensible__ = true;
-
-    var len = formalParameterList.length || 0;
-
-    f.__DefineOwnProperty__(
-        "es_length",
-        new ES_ST_PropertyDescriptor({
-            __Value__ : len,
-            __Writable__ : false,
-            __Enumerable__ : false,
-            __Configurable__ : false
-        }),
-        false
-    );
-
+    //开始创建原型
     var proto = ES_objectConstructor.__Construct__();
+    ES_Helper._initOwnProperty(proto, {
+        "constructor" : f
+    }, {
+        __Writable__ : true,
+        __Enumerable__ : false,
+        __Configurable__ : true
+    });
 
-    proto.__DefineOwnProperty__(
-        "es_constructor",
-        new ES_ST_PropertyDescriptor({
-            __Value__ : f,
-            __Writable__ : true,
-            __Enumerable__ : false,
-            __Configurable__ : true
-        }),
-        false
-    );
-
-    f.__DefineOwnProperty__(
-        "es_prototype",
-        new ES_ST_PropertyDescriptor({
-            __Value__ : proto,
-            __Writable__ : true,
-            __Enumerable__ : false,
-            __Configurable__ : false
-        }),
-        false
-    );
+    ES_Helper._initOwnProperty(proto, {
+        "prototype" : proto
+    }, {
+        __Writable__ : true,
+        __Enumerable__ : false,
+        __Configurable__ : false
+    });
 
     if (strict === true) {
         var thrower = ES_throwTypeError;//13.2.3
         f.__DefineOwnProperty__(
-            "es_caller",
+            "caller",
             new ES_ST_PropertyDescriptor({
                 __Get__ : thrower,
                 __Set__ : thrower,
@@ -128,7 +117,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
             false
         );
         f.__DefineOwnProperty__(
-            "es_arguments",
+            "arguments",
             new ES_ST_PropertyDescriptor({
                 __Get__ : thrower,
                 __Set__ : thrower,
@@ -146,35 +135,23 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
  * 标准内置Function构造器
  */
 var ES_functionConstructor = (function () {
-    var fc = new ES_Object({
+    var o = new ES_Object({
         __Class__ : 'Function',
         __Prototype__ : ES_functionPrototype,
         __Extensible__ : true
     });
 
-    fc.__DefineOwnProperty__(
-        "es_prototype",
-        new ES_ST_PropertyDescriptor({
-            __Value__ : ES_functionPrototype,
-            __Writable__ : true,
-            __Enumerable__ : true,
-            __Configurable__ : false
-        }),
-        false
-    );
-    fc.__DefineOwnProperty__(
-        "es_length",
-        new ES_ST_PropertyDescriptor({
-            __Value__ : 1,
-            __Writable__ : false,
-            __Enumerable__ : false,
-            __Configurable__ : false
-        }),
-        false
-    );
+    ES_Helper._initOwnProperty(o, {
+        "prototype" : ES_functionPrototype,
+        "lenght" : 1
+    },{
+        __Writable__ : false,
+        __Enumerable__ : false,
+        __Configurable__ : false
+    });
 
     //作为构造器使用 15.3.2 new Function()
-    fc.__Construct__ = function (/*p1, p2, ... pn, body*/) {
+    o.__Construct__ = function (/*p1, p2, ... pn, body*/) {
         var argCount = arguments.length;//参数总数， 包括body
         var p = '';
         if (argCount === 0) {
@@ -214,5 +191,5 @@ var ES_functionConstructor = (function () {
         return new ES_createFunctionObject(p, body, scope, strict);
     };
 
-    return fc;
+    return o;
 })();

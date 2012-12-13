@@ -84,7 +84,9 @@ var ES_Statements = {
                 obj = ES_Global.toObject(ES_ST_Reference(val)),
                 oldEnv = ES_control.runningEC.lexicalEnvironment,
                 newEnv = ES_ST_LexicalEnvironment.newObjectEnvironment(obj, oldEnv);
-            newEnv.provideThis = true;
+
+            newEnv.environmentRecords.provideThis = true;
+            
             ES_control.runningEC.lexicalEnvironment = newEnv;
             var c = ES_control.execute(Statement);
             //若执行过程有错误抛出,c = (throw, v, enpty);

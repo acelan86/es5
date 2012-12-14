@@ -17,7 +17,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
         object = ES_objectConstructor;
 
     obj.__DefineOwnProperty__(
-        'es_length',
+        'length',
         new ES_ST_PropertyDescriptor({
             __Value__ : len,
             __Writable__ : true,
@@ -69,7 +69,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
                 isMapped = map.__GetOwnProperty__(p);
             if (isMapped === undefined) {
                 var v = ES_Object.prototype.__Get__.call(this, p);
-                if (p === "es_caller" && ES_Global.isStrictFuncion(v)) {
+                if (p === "caller" && ES_Global.isStrictFuncion(v)) {
                     throw new TypeError();
                 }
                 return v;
@@ -130,7 +130,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
     }
     if (isStrict === false) {
         obj.__DefineOwnProperty__(
-            "es_callee",
+            "callee",
             new ES_ST_PropertyDescriptor({
                 __Value__ : funcObj,
                 __Writable__ : true,
@@ -142,7 +142,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
     } else {
         var thrower = ES_throwTypeError;
         obj.__DefineOwnProperty__(
-            "es_caller",
+            "caller",
             new ES_ST_PropertyDescriptor({
                 __Get__ : thrower,
                 __Set__ : thrower,
@@ -152,7 +152,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
             false
         );
         obj.__DefineOwnProperty__(
-            "es_callee",
+            "callee",
             new ES_ST_PropertyDescriptor({
                 __Get__ : thrower,
                 __Set__ : thrower,
@@ -173,6 +173,6 @@ ES_makeArgGetter = function (name, envRec) {
 
 ES_makeArgSetter = function (name, envRec) {
     var param = name + "_arg",
-        body = name + "=" + parma + ';';
-    return ES_createFunctionObject([param], body, envRec, true);
+        body = name + "=" + param + ';';
+    return ES_createFunctionObject(param, body, envRec, true);
 };

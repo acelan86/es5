@@ -4,22 +4,24 @@ var ES_control = (function () {
         ecStack = [ES_globalEC];
 
     return {
+        ecStack : ecStack,
         runningEC : runningEC,
         enter : function (ec) {
             ecStack.push(ec);
-            runningEC = ecStack[ecStack.length - 1];
-            console.log('enter, curEC:', runningEC);
+            this.runningEC = ecStack[ecStack.length - 1];
+            console.log('enter, curEC:', ES_control.runningEC);
         },
         quit : function () {
             ecStack.pop();
-            runningEC = ecStack[ecStack.length - 1];
+            this.runningEC = ecStack[ecStack.length - 1];
             console.log('quit, curEC:', runningEC);
         },
         execute : function (code) {
+            //window[code.type][code.exp].call(null, code.args)
             return {
                 type : "return",
-                value : window[code.type][code.exp].call(null, code.args),
-                target : runningEC
+                value : {},
+                target : this.runningEC
             };
         }
     };

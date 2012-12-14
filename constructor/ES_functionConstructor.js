@@ -2,6 +2,7 @@
  * 创建函数对象的算法13.2
  */
 function ES_createFunctionObject(formalParameterList, functionBody, scope, strict) {
+    formalParameterList = formalParameterList || "";
     var f = new ES_Object({
         __Class__ : 'Function',
         __Prototype__ : ES_functionPrototype,
@@ -16,7 +17,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     
     f.__Get__ = function (propertyName) {
         var v = ES_Object.prototype.__Get__.call(this, propertyName);
-        if (propertyName === 'es_caller' && ES_Global.isStrictCode(v)) {
+        if (propertyName === 'caller' && ES_Global.isStrictCode(v)) {
             throw new TypeError();
         }
         return v;
@@ -25,15 +26,15 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     f.__Call__ = function (thiz, args) {
         var funcCtx = ES_createExecuteContext(this, args, thiz);
         ES_control.enter(funcCtx);
-        ES_declarationBindingInstantiation(f.__Code__, args, f.__FormalParameters__);
+        ES_declarationBindingInstantiation(this.__Code__, args, this.__FormalParameters__);
         var result = ES_control.execute(this.__Code__);
         ES_control.quit();
         //退出执行环境
         if (ES_Global.isThrowCode(result.type)) {
-            throw result.type;
+            throw result.value;
         }
         if (ES_Global.isReturnCode(result.type)) {
-            return result.type;
+            return result.value;
         }
         return undefined;
     };
@@ -43,7 +44,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
             __Class__ : 'Object',
             __Extensible__ : true,
         });
-        var proto = this.__Get__('es_prototype');
+        var proto = this.__Get__('prototype');
         if (ES_Global.type(proto) === "ES_LT_Object") {
             obj.__Prototype__ = proto;
         } else {
@@ -79,7 +80,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
 
 
     ES_Helper._initOwnProperty(f, {
-        "length" : formalParameterList.length || 0
+        "length" : formalParameterList.split(',').length || 0
     }, {
         __Writable__ : false,
         __Enumerable__ : false,

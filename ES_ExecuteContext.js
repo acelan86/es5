@@ -1,10 +1,11 @@
 /**
  * 执行上下文对象
  */
-function ES_ExecuteContext(lex, thiz) {
+function ES_ExecuteContext(lex, thiz, _name) {
     this.lexicalEnvironment = lex;
     this.varEnvironment = lex;
     this.thisBinding = thiz;
+    this._name = _name; //用来标识而已
 }
 /**
  * 创建一个新的执行环境
@@ -13,7 +14,8 @@ function ES_ExecuteContext(lex, thiz) {
 function ES_createExecuteContext(funcObj, args, thisArg) {
     var thiz,
         isStrict = false,
-        args = args || [];
+        args = args || [],
+        _num = 0;
 
     //1、确定this
     if (ES_Global.isStrictCode(funcObj.__Code__)) {
@@ -28,7 +30,7 @@ function ES_createExecuteContext(funcObj, args, thisArg) {
     }
     //2、建立词法环境,建立执行环境
     var localEnv = ES_ST_LexicalEnvironment.newDeclarativeEnvironment(funcObj.__Scope__),
-        ec = new ES_ExecuteContext(localEnv, thiz);
+        ec = new ES_ExecuteContext(localEnv, thiz, 'EC' + (_num++));
     return ec;
 };
 
@@ -38,7 +40,8 @@ function ES_createExecuteContext(funcObj, args, thisArg) {
  * @param  {code}           code    当前调用者提供的代码
  */
 function ES_declarationBindingInstantiation(code, args, argNames) {
-    var envRec = ES_control.runningEC.varEnvironment.environmentRecords,
+    var ec = ES_control.runningEC,
+        envRec = ec.varEnvironment.environmentRecords,
         strict = ES_control.isStrict || false,
         configurableBindings = false,
         _code = code.code;
@@ -47,7 +50,7 @@ function ES_declarationBindingInstantiation(code, args, argNames) {
     }
 
     if (ES_Global.isFunctionCode(code)) {
-        var func = ES_createFunctionObject(argNames, code, ec, isStrict);
+        var func = ES_createFunctionObject(argNames, code, ec, strict);
         argNames = argNames.split(',');
         var argCount = args.length;
         var n = 0,
@@ -102,8 +105,8 @@ function ES_declarationBindingInstantiation(code, args, argNames) {
 
     var argumentsAlreadyDeclared = envRec.hasBinding("arguments");
     if (ES_Global.isFunctionCode(code) && argumentsAlreadyDeclared === false) {
-        var argsObj = ES_createArgumentsObject(func, argNames, args, envRec, isStrict);
-        if (isStrict === true) {
+        var argsObj = ES_createArgumentsObject(func, argNames, args, envRec, strict);
+        if (strict === true) {
             envRec.createImmutableBinding("arguments");
             envRec.initializeImmutableBinding("arguments", argsObj);
         } else {

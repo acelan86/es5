@@ -49,6 +49,7 @@
         <!-- 引入表达式相关定义 -->
         <script src="../expressions/ES_Statements.js"></script>
         <script src="../expressions/ES_FunctionDefinition.js"></script>
+        <script src="../expressions/ES_LeftHandSideExpressions.js"></script>
 
         <script>
             // var dataDesc = new ES_ST_PropertyDescriptor({
@@ -266,29 +267,24 @@
             // });
             
 
-            /* 测试获取全局对象 */
-            test("window", function () {
-                var gloLex = ES_control.runningEC.lexicalEnvironment,
-                    ps = ['Undefined', 'NaN', 'Infinity', 'eval', 'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'decodeURI', 'decodeURIComponent', 'encodeURI', 'encodeURIComponent', 'Object', 'Function', 'Array', 'String', 'Boolean', 'Number', 'Date', 'RegExp', 'Math', 'JSON'],
-                    i = 0,
-                    p;
-                function getGloProp(name) {
-                    return ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(gloLex, name));
-                }
-                while (p = ps[i++]) {
-                    var b = true;
-                    try {
-                        getGloProp(p);
-                    } catch (e) {
-                        b = false;
-                    }
-                    equal(b, true, "window." + p);
-                }
-            });
-
             /**
              * 模拟执行函数代码
              */
+            var innerCode = {
+                codeType : "function",
+                strict : true,
+                code : [
+                    /**
+                     * 一个模拟变量声明
+                     * var a;
+                     */
+                    {
+                        type : "ES_Statements",
+                        exp : "VD : id",
+                        args : ["a"]
+                    }
+                ]
+            };
             var funcCode = {
                 codeType : 'function',
                 strict : true,
@@ -302,7 +298,11 @@
                     {
                         type : "ES_FunctionDefinition",
                         exp : "FD : function id(par) {body}",
-                        args : ["abc", "x,y", "return x + y;"]
+                        args : [
+                            "abc",
+                            "x,y", 
+                            innerCode
+                        ]
                     },
                     /**
                      * 一个模拟变量声明
@@ -312,6 +312,25 @@
                         type : "ES_Statements",
                         exp : "VD : id",
                         args : ["a"]
+                    },
+                    /**
+                     * 函数调用
+                     */
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "CallExpression : memberExp args",
+                        args : [
+                            {
+                                type : "ES_LeftHandSideExpressions",
+                                exp : "MemberExpression : IdentifierName",
+                                args : ["abc"]
+                            },
+                            {
+                                type : "ES_LeftHandSideExpressions",
+                                exp : "Arguments : ()",
+                                args : []
+                            }
+                        ]
                     }
                 ]
             };
@@ -346,6 +365,25 @@
                         type : "ES_Statements",
                         exp : "VD : id",
                         args : ["a"]
+                    },
+                    /**
+                     * 函数调用
+                     */
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "CallExpression : memberExp args",
+                        args : [
+                            {
+                                type : "ES_LeftHandSideExpressions",
+                                exp : "MemberExpression : IdentifierName",
+                                args : ["abc"]
+                            },
+                            {
+                                type : "ES_LeftHandSideExpressions",
+                                exp : "Arguments : ()",
+                                args : []
+                            }
+                        ]
                     }
                 ]
             };
@@ -364,11 +402,11 @@
 
                 console.debug("global executing...");
                 //执行abc(1, 2);
-                (function (name, args) {
-                    var fo = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, name, true));
-                    console.debug(fo);
-                    fo.__Call__(ES_control.runningEC.thisBinding, args);
-                })("abc", [1, 2]);
+                ES_control.run(gloCode);
+                // (function (name, args) {
+                //     var fo = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, name, true));
+                //     console.debug(fo.__Call__(ES_control.runningEC.thisBinding, args));
+                // })("abc", [1, 2]);
             
             })(gloCode);
         </script>

@@ -3,7 +3,7 @@
  */
 //11.2
 var ES_LeftHandSideExpressions = {
-    "PropertyAccessor" : {
+    //"PropertyAccessor" : {
         "MemberExpression:MemberExpression[Expression]" : function (MemberExpression, Expression) {
             var baseReference = ES_control.execute(MemberExpression),
                 baseValue = ES_ST_Reference.getValue(baseReference),
@@ -13,8 +13,15 @@ var ES_LeftHandSideExpressions = {
                 isStrict = ES_control.runningEC.isStrict;
             ES_Global.checkObjectCoercible(baseValue);
             return new ES_ST_Reference(baseValue, propertyNameString, isStrict);
-        }
-    },
+        },
+        "MemberExpression : IdentifierName" : function (IdentifierName) {
+            return ES_ST_LexicalEnvironment.getIdentifierReference(
+                ES_control.runningEC.lexicalEnvironment,
+                IdentifierName,
+                ES_control.runningEC.isStrict
+            );
+        },
+    //},
     "TheNewOperator" : {
         "NewExpression:new NewExpression" : function (NewExpression) {
             var ref = ES_control.execute(NewExpression),
@@ -40,11 +47,13 @@ var ES_LeftHandSideExpressions = {
             return constructor.__Construct__(argList);
         }
     },
-    "FunctionCall" : {
-        "CallExpression:MemberExpression Arguments" : function (MemberExpression, Arguments) {
-            var ref = ES_control.execute(MemberExpression),
+    //函数调用
+    //"FunctionCall" : {
+        //CallExpression:MemberExpression Arguments
+        "CallExpression : memberExp args" : function (memberExp, args) {
+            var ref = ES_control.execute(memberExp),
                 func = ES_ST_Reference.getValue(ref),
-                argList = ES_control.execute(Arguments);
+                argList = ES_control.execute(args);
             if (ES_Global.type(func) !== 'ES_LT_Object') {
                 throw new TypeError();
             }
@@ -54,7 +63,7 @@ var ES_LeftHandSideExpressions = {
 
             //获取THIS值
             if (ES_Global.type(ref) === 'ES_ST_Reference') {
-                if (ref.isPropertyReference === true) {
+                if (ref.isPropertyReference() === true) {
                     thisValue = ref.getBase();
                 } else {
                     //基值是环境记录项
@@ -64,27 +73,27 @@ var ES_LeftHandSideExpressions = {
                 thisValue = undefined;
             }
             func.__Call__(thisValue, argList);
-        }
-    },
-    "ArgumentList" : {
-        "Arguments:()" : function () {
+        },
+    //},
+    //"ArgumentList" : {
+        "Arguments : ()" : function () {
             return [];
         },
-        "Arguments:(ArgumentList)" : function (ArgumentList) {
+        "Arguments : (ArgumentList)" : function (ArgumentList) {
             return ES_control.execute(ArgumentList);
         },
-        "ArgumentList:AssignmentExpression" : function (AssignmentExpression) {
+        "ArgumentList : AssignmentExpression" : function (AssignmentExpression) {
             var ref = ES_control.execute(AssignmentExpression),
                 arg = ES_ST_Reference.getValue(ref);
             return arg;
         },
-        "ArgumentList:ArgumentList, AssignmentExpression" : function (ArgumentList, AssignmentExpression) {
+        "ArgumentList : ArgumentList, AssignmentExpression" : function (ArgumentList, AssignmentExpression) {
             var precedingArgs = ES_control.execute(ArgumentList),
                 ref = ES_control.execute(AssignmentExpression),
                 arg = ES_ST_Reference.getValue(ref);
             return precedingArgs.push(arg);
-        }
-    },
+        },
+    //},
     "FunctionExpression" : {
         "MemberExpression:FunctionExpression" : function (FunctionExpression) {
             return ES_control.execute(FunctionExpression);

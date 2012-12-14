@@ -9,20 +9,32 @@ var ES_control = (function () {
         enter : function (ec) {
             ecStack.push(ec);
             this.runningEC = ecStack[ecStack.length - 1];
-            console.log('enter, curEC:', ES_control.runningEC);
+            console.log('enter newEC, curEC:', ES_control.runningEC);
         },
         quit : function () {
             ecStack.pop();
             this.runningEC = ecStack[ecStack.length - 1];
             console.log('quit, curEC:', runningEC);
         },
-        execute : function (code) {
+
+        run : function (code) {
+            var _code = code.code,
+                i = 0,
+                line;
+            while (line = _code[i++]) {
+                if (!ES_Global.isFunctionDeclaration(line) && !ES_Global.isVariableDeclaration(line)) {
+                    this.execute(line);
+                }
+            }
             //window[code.type][code.exp].call(null, code.args)
             return {
                 type : "return",
                 value : {},
                 target : this.runningEC
             };
+        },
+        execute : function (expr) {
+            return window[expr.type][expr.exp].apply(null, expr.args);
         }
     };
 })();

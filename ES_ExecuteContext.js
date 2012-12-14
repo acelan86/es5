@@ -7,6 +7,7 @@ function ES_ExecuteContext(lex, thiz, _name) {
     this.thisBinding = thiz;
     this._name = _name; //用来标识而已
 }
+ES_ExecuteContext._num = 0;
 /**
  * 创建一个新的执行环境
  * caller.funcObj(args);
@@ -14,8 +15,7 @@ function ES_ExecuteContext(lex, thiz, _name) {
 function ES_createExecuteContext(funcObj, args, thisArg) {
     var thiz,
         isStrict = false,
-        args = args || [],
-        _num = 0;
+        args = args || [];
 
     //1、确定this
     if (ES_Global.isStrictCode(funcObj.__Code__)) {
@@ -30,7 +30,7 @@ function ES_createExecuteContext(funcObj, args, thisArg) {
     }
     //2、建立词法环境,建立执行环境
     var localEnv = ES_ST_LexicalEnvironment.newDeclarativeEnvironment(funcObj.__Scope__),
-        ec = new ES_ExecuteContext(localEnv, thiz, 'EC' + (_num++));
+        ec = new ES_ExecuteContext(localEnv, thiz, 'EC' + (ES_ExecuteContext._num++));
     return ec;
 };
 

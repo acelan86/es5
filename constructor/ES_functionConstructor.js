@@ -27,7 +27,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         var funcCtx = ES_createExecuteContext(this, args, thiz);
         ES_control.enter(funcCtx);
         ES_declarationBindingInstantiation(this.__Code__, args, this.__FormalParameters__);
-        var result = ES_control.execute(this.__Code__);
+        var result = ES_control.run(this.__Code__);
         ES_control.quit();
         //退出执行环境
         if (ES_Global.isThrowCode(result.type)) {

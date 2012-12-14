@@ -273,26 +273,31 @@
              *  function abc(e, f) {
              *      function abc(x, y) {
              *          var a;
-             *          x;
-             *          y;
-             *          e;
-             *          f;
-             *          g;
+             *          x;  //undefined
+             *          y;  //undefined
+             *          e;  //undefined
+             *          f;  //undefined
+             *          g;  //undefined
              *          
              *      },
              *      var a;
-             *      e;
-             *      f;
-             *      g;
+             *      e;   //undefined
+             *      f;   //undefined
+             *      g;   //undefined
              *      abc(1, 2);
              *  }
-             *  var g;
+             *  var g; //undefined;
              *  abc(1, 2);
              *
              */
             /**
              * 模拟执行函数代码
              */
+            var nullCode = {
+                codeType : "function",
+                strict : true,
+                code : []
+            };
             var innerCode = {
                 codeType : "function",
                 strict : true,
@@ -337,19 +342,22 @@
                 codeType : 'function',
                 strict : true,
                 code : [
+                    //在变量a声明前获取变量
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["a"]
+                    },
                     /**
-                     * 一个模拟的词法分析过的函数声明
-                     * function abc(x, y) {
-                     *     return x + y;
-                     * }
+                     * 声明一个与变量a同名的函数a
                      */
                     {
                         type : "ES_FunctionDefinition",
                         exp : "FD : function id(par) {body}",
                         args : [
-                            "abc",
+                            "a",
                             "x,y", 
-                            innerCode
+                            nullCode
                         ]
                     },
                     /**
@@ -394,6 +402,26 @@
                         type : "ES_LeftHandSideExpressions",
                         exp : "MemberExpression : IdentifierName",
                         args : ["g"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["NoIn"]
+                    },
+                    /**
+                     * 一个模拟的词法分析过的函数声明
+                     * function abc(x, y) {
+                     *     return x + y;
+                     * }
+                     */
+                    {
+                        type : "ES_FunctionDefinition",
+                        exp : "FD : function id(par) {body}",
+                        args : [
+                            "abc",
+                            "x,y", 
+                            innerCode
+                        ]
                     }
                 ]
             };
@@ -458,10 +486,6 @@
 
 
             (function (gloCode) {
-                //ES_globalObject init..
-                console.debug("ES_globalObject initilized", ES_globalObject);
-                //ES_globalEC init..
-                console.debug("ES_globalEC initilized", ES_globalEC);
                 //preprocessing
                 ES_declarationBindingInstantiation(gloCode, ES_Global.isStrictCode(gloCode), null);
                 ES_control.run(gloCode);

@@ -20,7 +20,7 @@ var ES_LeftHandSideExpressions = {
                 IdentifierName,
                 ES_control.runningEC.isStrict
             );
-            console.debug(ES_control.runningEC._name, IdentifierName, ES_ST_Reference.getValue(ref));
+            console.debug(ES_control.runningEC._name, IdentifierName, ref);
             return ref;
         },
     //},

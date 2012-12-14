@@ -9,12 +9,10 @@ var ES_control = (function () {
         enter : function (ec) {
             ecStack.push(ec);
             this.runningEC = ecStack[ecStack.length - 1];
-            console.log('enter newEC, curEC:', ES_control.runningEC);
         },
         quit : function () {
             ecStack.pop();
             this.runningEC = ecStack[ecStack.length - 1];
-            console.log('quit, curEC:', runningEC);
         },
 
         run : function (code) {

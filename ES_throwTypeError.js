@@ -8,6 +8,7 @@ var ES_throwTypeError = (function () {
 	f.__Call__ = function (thiz, args) {
         var funcCtx = ES_createExecuteContext(this.__FormalParameters__, args, thiz);
         ES_control.enter(funcCtx);
+        ES_declarationBindingInstantiation(f.__Code__, args, f.__FormalParameters__);
         var result = ES_control.excute(f.__Code__);
         ES_control.quit();
         //退出执行环境

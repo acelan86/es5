@@ -5,7 +5,11 @@
 var ES_Statements = {
     "Block" : {
         "Block:{}" : function () {
-            return ['normal', {}, {}];
+            return {
+                type : 'normal',
+                value : {},
+                target : {}
+            };
         },
         "Block:{StatementList}" : function (StatementList) {
             return ES_control.execute(StatementList);
@@ -23,91 +27,102 @@ var ES_Statements = {
         }
     },
     //12.2
-    "VariableStatement" : {
-        "VariableStatement:var VariableDeclarationList" : function (VariableDeclarationList) {
-            ES_control.execute(VariableDeclarationList);
-            return ["normal", "", ""]; //“”代表empty
+    "Variable" : {
+        //VariableStatement:var VariableDeclarationList
+        "VS : var vdl" : function (vdl) {
+            ES_control.execute(vdl);
+            return {
+                type : "normal",
+                value : {},
+                target : {}
+            }; 
         },
-        "VariableDeclarationList:VariableDeclaration" : function (VariableDeclaration) {
-            ES_control.execute(VariableDeclaration);
+        //VariableDeclarationList:VariableDeclaration
+        "VDL : vd" : function (vd) {
+            ES_control.execute(vd);
         },
-        "VariableDeclarationList:VariableDeclarationList, VariableDeclaration" : function (VariableDeclarationList, VariableDeclaration) {
-            ES_control.execute(VariableDeclarationList);
-            ES_control.execute(VariableDeclaration);
+        //VariableDeclarationList:VariableDeclarationList, VariableDeclaration
+        "VDL : vdl, vd" : function (vdl, vd) {
+            ES_control.execute(vdl);
+            ES_control.execute(vd);
         },
-        "VariableDeclaration:Identifier" : function (Identifier) {
-            return Identifier;
+        //VariableDeclaration:Identifier
+        "VD : id" : function (id) {
+            return id;
         },
-        "VariableDeclaration:Identifier Initialiser" : function (Identifier, Initialiser) {
-            var lhs = ES_control.execute(Identifier), //实际为标识符查找过程,返回值为ES_ST_Reference，同11.1.2
-                rhs = ES_control.execute(Initialiser),
+        //VariableDeclaration:Identifier Initialiser
+        "VD : id init" : function (id, init) {
+            var lhs = ES_control.execute(id), //实际为标识符查找过程,返回值为ES_ST_Reference，同11.1.2
+                rhs = ES_control.execute(init),
                 value = ES_ST_Reference.getValue(rhs);
             ES_ST_Reference.putValue(lhs, value);
             return Identifier;
         },
-        "Initialiser:=AssignmentExpression" : function (AssignmentExpression) {
-            return ES_control.execute(AssignmentExpression);
+        //Initialiser:=AssignmentExpression
+        "INIT : = assignExpression" : function (assignExpression) {
+            return ES_control.execute(assignmentExpression);
         }
     },
     //12.3
-    "EmptyStatement" : {
+    "Empty" : {
 
     },
     //12.4
-    "ExpressionStatement" : {
+    "Expression" : {
 
     },
     //12.5
-    "ifStatement" : {
+    "if" : {
 
     },
     //迭代语句 12.6
-    "IterationStatements" : {
+    "Iteration" : {
 
     },
     //12.7
-    "continueStatement" : {
+    "continue" : {
 
     },
     //12.8
-    "breakStatement" : {
+    "break" : {
 
     },
     //12.9
-    "returnStatement" : {
+    "return" : {
 
     },
     //12.10
-    "withStatement" : {
-        "withStatement:with(Expression)Statement" : function (Expression, Statement) {
+    "widthStatement" : {
+        "withStatement:  with (Expression) Statement" : function (Expression, Statement) {
             var val = ES_control.execute(Expression),
                 obj = ES_Global.toObject(ES_ST_Reference(val)),
                 oldEnv = ES_control.runningEC.lexicalEnvironment,
                 newEnv = ES_ST_LexicalEnvironment.newObjectEnvironment(obj, oldEnv);
 
             newEnv.environmentRecords.provideThis = true;
-            
+
             ES_control.runningEC.lexicalEnvironment = newEnv;
             var c = ES_control.execute(Statement);
             //若执行过程有错误抛出,c = (throw, v, enpty);
             ES_control.runningEC.lexicalEnvironment = oldEnv;
             return c;
+        }
     },
     //12.11
-    "switchStatement" : {
+    "switch" : {
 
     },
     //12.12
-    "LabelledStatements" : {
+    "Label" : {
 
     },
     //12.13
-    "throwStatement" : {
+    "throw" : {
 
     },
     //12.14
     "tryStatement" : {
-        "Catch:catch(Identifier)Block" : function (Identifier, Block, c) {
+        "Catch: catch (Identifier) Block" : function (Identifier, Block, c) {
             //c是由throw传过来的
             var oldEnv = ES_control.runningEC.lexicalEnvironment,
                 catchEnv = ES_ST_LexicalEnvironment.newDeclarativeEnvironment(oldEnv);
@@ -118,12 +133,12 @@ var ES_Statements = {
             ES_control.runningEC.lexicalEnvironment = oldEnv;
             return b;
         },
-        "Finally:finally Block" : function (Block) {
+        "Finally: finally Block" : function (Block) {
             return ES_control.execute(Block);
         }
     },
     //12.15
-    "debuggerstatement" : {
+    "debugger" : {
 
     }
 };

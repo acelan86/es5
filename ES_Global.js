@@ -124,46 +124,22 @@ var ES_Global = {
         return true;
     },
     isStrictCode : function (code) {
-        return code && code[1] && (code[1] === "'use strict'"); 
+        return code.strict;
     },
     isFunctionCode : function (code) {
-        return code && code[0] && (code[0] === "funcCode"); 
+        return code.codeType === 'function';
     },
     isEvalCode : function (code) {
-        return code && code[0] && (code[0] === "eCode"); 
+        return code.codeType === 'eval';
     },
     isFunctionDeclaration : function (code) {
-        code = code || "";
-        var m = code.match(/function\s([a-zA-Z0-9]*)\(([^\(\)]*)\)\s*\{(.*)\}/);
-        if (m) {
-            console.debug(m);
-            return {
-                'identifier' : m[1],
-                'funcBody' : m[3],
-                'args' : m[2]
-            };
-        }
-        return false;
+        return code.exp.indexOf('FD : ') === 0;
     },
     isVariableDeclaration : function (code) {
-        code = code || "";
-        var m = code.match(/var\s*([a-zA-Z0-9]+)/);
-        if (m) {
-            return {
-                'identifier' : m[1]
-            }
-        }
-        return false;
+        return code.exp.indexOf('VD : ') === 0;
     },
     isVariableDeclarationNoIn : function (code) {
-        code = code || "";
-        var m = code.match(/var\s*([a-zA-Z0-9]+)/);
-        if (m) {
-            return {
-                'identifier' : m[1]
-            }
-        }
-        return false;
+        return code.exp.indexOf('VD : ') === 0;
     },
 
     isThrowCode : function (type) {

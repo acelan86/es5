@@ -1,22 +1,26 @@
 /**
  * 属性描述符（规范类型）
+ * _t用来区分是类型的属性（访问器， 数据， 或者其他，默认为数据属性）
  */
-function ES_ST_PropertyDescriptor(o) {
-    //命名的数据属性（可选）
-    if ('undefined' !== typeof o.__Value__ ) {
-        this.__Value__ = o.__Value__;
-        this.__Writable__ = o.__Writable__ || false; //若为false, 试图通过__Put__方法去访问__Value__都会失效
+function ES_ST_PropertyDescriptor(o, _t) {
+    switch (_t) {
+        case 'accessor' : 
+            this._t = 'accessor';
+            this.__Get__ = o.__Get__ || undefined;
+            this.__Set__ = o.__Set__ || undefined;
+            break;
+        case 'generic' : 
+            this._t = 'generic';
+            break;
+        default : 
+            this._t = 'data';
+            this.__Value__ = o.__Value__ || undefined;
+            this.__Writable__ = o.__Writable__ || false;
+            break;
     }
-
-    //命名的访问器属性(可选)
-    if ('undefined' !== typeof o.__Get__ || 'undefined' !== typeof o.__Set__) {
-        this.__Get__ = o.__Get__ || undefined; //函数方法或者undefined
-        this.__Set__ = o.__Set__ || undefined; //函数方法或者undefined
-    }
-
     //公共属性
-    this.__Enumerable__ = o.__Enumerable || false; //是否可被for-in枚举
-    this.__Configurable__ = o.__Configurable__ || false;//是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
+    this.__Enumerable__ = this.__Enumerable__ || false; //是否可被for-in枚举
+    this.__Configurable__ = this.__Configurable__ || false;//是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
 }
 
 /**
@@ -28,9 +32,13 @@ ES_ST_PropertyDescriptor.isAccessorDescriptor = function (desc) {
     if ('undefined' === typeof desc) {
         return false;
     }
-    if ('undefined' !== typeof desc.__Get__ || 'undefined' !== typeof desc.__Set__) {
+    if (desc._t === 'accessor' || 'undefined' !== typeof desc.__Get__ || 'undefined' !== typeof desc.__Set__) {
         return true;
     }
+    //ES描述如下才是正确的
+    // if ('undefined' !== typeof desc.__Get__ || 'undefined' !== typeof desc.__Set__) {
+    //     return true;
+    // }
     return false;
 };
 
@@ -43,7 +51,7 @@ ES_ST_PropertyDescriptor.isDataDescriptor = function (desc) {
     if (desc === undefined) {
         return false;
     }
-    if ('undefined' !== typeof desc.__Value__ || 'undefined' !== typeof desc.__Writable__) {
+    if (desc._t === 'data' || 'undefined' !== typeof desc.__Value__ || 'undefined' !== typeof desc.__Writable__) {
         return true;
     }
     return false;

@@ -25,6 +25,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
     f.__Call__ = function (thiz, args) {
         var funcCtx = ES_createExecuteContext(this, args, thiz);
         ES_control.enter(funcCtx);
+        ES_declarationBindingInstantiation(f.__Code__, args, f.__FormalParameters__);
         var result = ES_control.execute(this.__Code__);
         ES_control.quit();
         //退出执行环境
@@ -113,7 +114,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
                 __Set__ : thrower,
                 __Enumerable__ : false,
                 __Configurable__ : false
-            }),
+            }, 'accessor'),
             false
         );
         f.__DefineOwnProperty__(
@@ -123,7 +124,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
                 __Set__ : thrower,
                 __Enumerable__ : false,
                 __Configurable__ : false
-            }),
+            }, 'accessor'),
             false
         );
     }

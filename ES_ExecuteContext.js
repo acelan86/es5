@@ -20,7 +20,7 @@ function ES_createExecuteContext(funcObj, args, thisArg) {
         thiz = thisArg;
         isStrict = true;
     } else if (thiz === null || thiz === undefined) {
-        thiz = ES_GlobalObject;
+        thiz = ES_globalObject;
     } else if (ES_Global.type(thisArg) !== "ES_LT_Object") {
         thiz = ES_Global.toObject(thisArg);
     } else {
@@ -29,8 +29,6 @@ function ES_createExecuteContext(funcObj, args, thisArg) {
     //2、建立词法环境,建立执行环境
     var localEnv = ES_ST_LexicalEnvironment.newDeclarativeEnvironment(funcObj.__Scope__),
         ec = new ES_ExecuteContext(localEnv, thiz);
-    //3、在执行环境中绑定函数和变量声明
-    ES_declarationBindingInstantiation(ec, funcObj.__Code__, isStrict, args, funcObj.__FormalParameters__);
     return ec;
 };
 
@@ -39,14 +37,15 @@ function ES_createExecuteContext(funcObj, args, thisArg) {
  * @param  {ExecuteContext} ec      当前执行上下文
  * @param  {code}           code    当前调用者提供的代码
  */
-function ES_declarationBindingInstantiation(ec, code, isStrict, args, argNames) {
-    var envRec = ec.varEnvironment.environmentRecords,
+function ES_declarationBindingInstantiation(code, args, argNames) {
+    var envRec = ES_control.runningEC.varEnvironment.environmentRecords,
+        strict = ES_control.isStrict || false,
         configurableBindings = false,
-        strict = false;
+        _code = code.code;
     if (ES_Global.isEvalCode(code)) {
         configurableBindings = true;
     }
-    strict = isStrict;
+
     if (ES_Global.isFunctionCode(code)) {
         var func = ES_createFunctionObject(argNames, code, ec, isStrict);
         argNames = argNames.split(',');
@@ -67,11 +66,15 @@ function ES_declarationBindingInstantiation(ec, code, isStrict, args, argNames) 
         }
     }
     //绑定函数声明
-    var f, fn, fo;
-    for (var linenum = 2, len = code.length; linenum < len; linenum++) {
-        if (f = ES_Global.isFunctionDeclaration(code[linenum])) {
-            fn = f.identifier; //标识符
-            fo = new ES_createFunctionObject(f.args, f.funcBody, ec, isStrict);
+    var fn, fo, linenum = 0, line;
+    while (line = _code[linenum++]) {
+        if (ES_Global.isFunctionDeclaration(line) === true) {
+            fn = line.args[0]; //标识符
+            //old
+            //fo = new ES_createFunctionObject(line.args[1], line.args[2], ec, isStrict);
+            //更新描述为
+            fo = ES_FunctionDefinition["FD : function id(par) {body}"](fn, line.args[1], line.args[2]);
+
             var argAlreadyDeclared = envRec.hasBinding(fn);
             if (argAlreadyDeclared === false) {
                 envRec.createMutableBinding(fn, configurableBindings);
@@ -97,23 +100,23 @@ function ES_declarationBindingInstantiation(ec, code, isStrict, args, argNames) 
         }
     }
 
-    var argumentsAlreadyDeclared = envRec.hasBinding("es_arguments");
+    var argumentsAlreadyDeclared = envRec.hasBinding("arguments");
     if (ES_Global.isFunctionCode(code) && argumentsAlreadyDeclared === false) {
         var argsObj = ES_createArgumentsObject(func, argNames, args, envRec, isStrict);
         if (isStrict === true) {
-            envRec.createImmutableBinding("es_arguments");
-            envRec.initializeImmutableBinding("es_arguments", argsObj);
+            envRec.createImmutableBinding("arguments");
+            envRec.initializeImmutableBinding("arguments", argsObj);
         } else {
-            envRec.createMutableBinding("es_arguments");
-            envRec.setMutableBinding("es_arguments", argsObj, false);
+            envRec.createMutableBinding("arguments");
+            envRec.setMutableBinding("arguments", argsObj, false);
         }
     }
 
     //绑定内部变量声明
-    var d, dn;
-    for (var linenum = 2, len = code.length; linenum < len; linenum++) {
-        if (d = (ES_Global.isVariableDeclaration(code[linenum]) || ES_Global.isVariableDeclarationNoIn(code[linenum]))) {
-            dn = d.identifier;
+    var d, dn, linenum = 0, line;
+    while (line = _code[linenum++]) {
+        if (ES_Global.isVariableDeclaration(line) || ES_Global.isVariableDeclarationNoIn(line)) {
+            dn = line.args[0];
             var varAlreadyDeclared = envRec.hasBinding(dn);
             //解释了同一个lexicalEnv下，同名的变量定义无法覆盖同名函数定义
             if (varAlreadyDeclared === false) {

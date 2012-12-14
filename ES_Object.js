@@ -57,9 +57,11 @@ ES_Object.prototype = {
         var desc = new ES_ST_PropertyDescriptor({}),
             x = this._ownProperty[propertyName];
         if (ES_ST_PropertyDescriptor.isDataDescriptor(x)) {
+            desc._t = 'data';
             desc.__Value__ = x.__Value__;
             desc.__Writable__ = x.__Writable__;
         } else {
+            desc._t = 'acceessor';
             desc.__Get__ = x.__Get__;
             desc.__Set__ = x.__Set__;
         }
@@ -104,7 +106,10 @@ ES_Object.prototype = {
         var ownDesc = this.__GetOwnProperty__(propertyName);
         if (ES_ST_PropertyDescriptor.isDataDescriptor(ownDesc)) {
             var valueDesc = new ES_ST_PropertyDescriptor({
-                __Value__ : value
+                __Value__ : value,
+                __Writable__ : ownDesc.__Writable__,
+                __Enumerable__ : ownDesc.__Enumerable__,
+                __Configurable__ : ownDesc.__Configurable__
             });
             this.__DefineOwnProperty__(propertyName, valueDesc, isThrow);
             return;
@@ -251,13 +256,21 @@ ES_Object.prototype = {
                     __Set__             : propertyDescriptor.__Set__,
                     __Enumerable__      : propertyDescriptor.__Enumerable__,
                     __Configurable__    : propertyDescriptor.__Configurable__
-                });
+                }, 'accessor');
             }
             return true;
         }
-        if (propertyDescriptor.length === 0) {
-            return true;
-        }
+        //这里描述propertyDescriptor不存在任何字段
+        (function () {
+            var i = 0;
+            for (var k in propertyDescriptor) {
+                i++;
+            }
+            if (i === 0) {
+                return true;
+            }
+        })();
+
         if (ES_Global.sameValue(propertyDescriptor, current)) {
             return true;
         }
@@ -280,7 +293,7 @@ ES_Object.prototype = {
                         __Set__             : undefined,
                         __Enumerable__      : current.__Enumerable__,
                         __Configurable__    : current.__Configurable__
-                    });
+                    }, 'accessor');
                 } else {
                     this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor({
                         __Value__           : undefined,
@@ -315,7 +328,7 @@ ES_Object.prototype = {
                 }
             }
             //propertyDescriptor有所有特性字段
-            this._ownProperty[propertyName] = new ES_ST_PropertyDescriptor(propertyDescriptor);
+            this._ownProperty[propertyName] = propertyDescriptor;
             return true;
         }
     }

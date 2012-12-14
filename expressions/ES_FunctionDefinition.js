@@ -4,32 +4,35 @@
  */
 var ES_FunctionDefinition = {
     //函数声明
-    "FunctionDeclaration:function Identifier(FormalParameterList_opt){FunctionBody}" : function (Identifier, FormalParameterList, FunctionBody) {
+    //FunctionDeclaration:function Identifier(FormalParameterList_opt){FunctionBody}
+    "FD : function id(par) {body}" : function (id, par, body) {
         return ES_createFunctionObject(
-            FormalParameterList,
-            FunctionBody,
+            par,
+            body,
             ES_control.runningEC.varEnvironment,
-            ES_control.runningEC.isStrict || ES_Global.isStrictFunction(FunctionBody)
+            ES_control.runningEC.isStrict || ES_Global.isStrictCode(body)
         );
     },
-    "FunctionExpression:function (FormalParameterList_opt){FunctionBody}" : function (FormalParameterList, FunctionBody) {
+    //FunctionExpression:function (FormalParameterList_opt){FunctionBody}
+    "FE : function (par) {body}" : function (par, body) {
         return ES_createFunctionObject(
-            FormalParameterList,
-            FunctionBody,
+            par,
+            body,
             ES_control.runningEC.lexicalEnvironment,
-            ES_control.runningEC.isStrict || ES_Global.isStrictFunction(FunctionBody)
+            ES_control.runningEC.isStrict || ES_Global.isStrictCode(body)
         );
     },
     //函数表达式
-    "FunctionExpression:function Identifier_opt(FormalParameterList_opt){FunctionBody}" : function (Identifier, FormalParameterList, FunctionBody) {
+    //FunctionExpression:function Identifier_opt(FormalParameterList_opt){FunctionBody}
+    "FE : function id(par) {body}" : function (id, par, body) {
         var funcEnv = ES_ST_LexicalEnvironment.newDeclarativeEnvironment(ES_control.runningEC.lexicalEnvironment),
             envRec = funcEnv.enviromentRecords;
-        envRec.createImmutableBinding(Identifier);
+        envRec.createImmutableBinding(id);
         var closure = ES_createFunctionObject(
-            FormalParameterList,
-            FunctionBody,
+            par,
+            body,
             funcEnv,
-            ES_control.runningEC.isStrict || ES_Global.isStrictFunction(FunctionBody)
+            ES_control.runningEC.isStrict || ES_Global.isStrictCode(body)
         );
         envRec.initializeImmutableBinding(Identifier, closure);
         return closure;

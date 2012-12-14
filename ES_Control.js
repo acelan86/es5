@@ -8,25 +8,19 @@ var ES_control = (function () {
         enter : function (ec) {
             ecStack.push(ec);
             runningEC = ecStack[ecStack.length - 1];
+            console.log('enter, curEC:', runningEC);
         },
         quit : function () {
             ecStack.pop();
             runningEC = ecStack[ecStack.length - 1];
+            console.log('quit, curEC:', runningEC);
         },
-        execute : function (expression) {
-            expression = expression || [];
-            //代表一种表达式执行方案
-            function executeExpression(runningEC, expression) {
-                var type = 'return|throw|normal',
-                    value = {/*执行结果*/},
-                    target = {/*其他附加*/};
-                return {
-                    type : type,
-                    value : value,
-                    target : target
-                };
-            }
-            return executeExpression(runningEC, expression);
+        execute : function (code) {
+            return {
+                type : "return",
+                value : window[code.type][code.exp].call(null, code.args),
+                target : runningEC
+            };
         }
     };
 })();

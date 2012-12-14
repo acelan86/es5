@@ -15,11 +15,13 @@ var ES_LeftHandSideExpressions = {
             return new ES_ST_Reference(baseValue, propertyNameString, isStrict);
         },
         "MemberExpression : IdentifierName" : function (IdentifierName) {
-            return ES_ST_LexicalEnvironment.getIdentifierReference(
+            var ref = ES_ST_LexicalEnvironment.getIdentifierReference(
                 ES_control.runningEC.lexicalEnvironment,
                 IdentifierName,
                 ES_control.runningEC.isStrict
             );
+            console.debug(ES_control.runningEC._name, IdentifierName, ES_ST_Reference.getValue(ref));
+            return ref;
         },
     //},
     "TheNewOperator" : {

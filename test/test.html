@@ -270,14 +270,23 @@
             /** ============================
              *  如下代码的解释执行过程
              *  
-             *  function abc(x, y) {
+             *  function abc(e, f) {
              *      function abc(x, y) {
              *          var a;
+             *          x;
+             *          y;
+             *          e;
+             *          f;
+             *          g;
+             *          
              *      },
              *      var a;
+             *      e;
+             *      f;
+             *      g;
              *      abc(1, 2);
              *  }
-             *  var a;
+             *  var g;
              *  abc(1, 2);
              *
              */
@@ -296,6 +305,31 @@
                         type : "ES_Statements",
                         exp : "VD : id",
                         args : ["a"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["x"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["y"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["e"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["f"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["g"]
                     }
                 ]
             };
@@ -345,6 +379,21 @@
                                 args : []
                             }
                         ]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["e"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["f"]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["g"]
                     }
                 ]
             };
@@ -367,7 +416,7 @@
                         exp : "FD : function id(par) {body}",
                         args : [
                             "abc",
-                            "x,y", 
+                            "e,f", 
                             funcCode
                         ]
                     },
@@ -378,7 +427,7 @@
                     {
                         type : "ES_Statements",
                         exp : "VD : id",
-                        args : ["a"]
+                        args : ["g"]
                     },
                     /**
                      * 函数调用
@@ -398,6 +447,11 @@
                                 args : []
                             }
                         ]
+                    },
+                    {
+                        type : "ES_LeftHandSideExpressions",
+                        exp : "MemberExpression : IdentifierName",
+                        args : ["g"]
                     }
                 ]
             };

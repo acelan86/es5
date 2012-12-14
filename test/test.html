@@ -267,6 +267,20 @@
             // });
             
 
+            /** ============================
+             *  如下代码的解释执行过程
+             *  
+             *  function abc(x, y) {
+             *      function abc(x, y) {
+             *          var a;
+             *      },
+             *      var a;
+             *      abc(1, 2);
+             *  }
+             *  var a;
+             *  abc(1, 2);
+             *
+             */
             /**
              * 模拟执行函数代码
              */
@@ -388,26 +402,15 @@
                 ]
             };
 
-            
-
-            //ES_globalObject init..
-            console.debug("ES_globalObject initilized", ES_globalObject);
-            //ES_globalEC init..
-            console.debug("ES_globalEC initilized", ES_globalEC);
 
             (function (gloCode) {
+                //ES_globalObject init..
+                console.debug("ES_globalObject initilized", ES_globalObject);
+                //ES_globalEC init..
+                console.debug("ES_globalEC initilized", ES_globalEC);
                 //preprocessing
-                console.debug("global preprocessing...");
                 ES_declarationBindingInstantiation(gloCode, ES_Global.isStrictCode(gloCode), null);
-
-                console.debug("global executing...");
-                //执行abc(1, 2);
                 ES_control.run(gloCode);
-                // (function (name, args) {
-                //     var fo = ES_ST_Reference.getValue(ES_ST_LexicalEnvironment.getIdentifierReference(ES_globalEC.lexicalEnvironment, name, true));
-                //     console.debug(fo.__Call__(ES_control.runningEC.thisBinding, args));
-                // })("abc", [1, 2]);
-            
             })(gloCode);
         </script>
     </body>

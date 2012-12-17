@@ -73,7 +73,7 @@ function ES_declarationBindingInstantiation(code, args, argNames) {
      * 绑定过程会遍历全部代码，找到函数声明语句，绑定
      * 之后才遍历全部代码，找到变量声明语句，绑定，如果已经绑定函数名，就不再绑定变量
      * 这解释了
-     * 同名的变量无法覆盖同名函数绑定，如果同时声明了a变量和a函数，a一定是函数声明的绑定
+     * 同名的变量无法覆盖同名函数绑定，如果同时声明了a变量和a函数，不管先后顺序，a一定是函数声明的绑定
      */
     var fn, fo, linenum = 0, line;
     while (line = _code[linenum++]) {

@@ -7,14 +7,14 @@ var ES_objectPrototype = (function () {
 
     //下面其实都是用op.__DefineOwnProperty__定义的属性，为命名数据属性或者命名访问器属性，这样写就是为了方便
     op.__DefineOwnProperty__(
-        "es_constructor",
+        "constructor",
         new ES_ST_PropertyDescriptor({
             __Value__ : "ES_objectConstructor",
         }),
         false
     );
     op.__DefineOwnProperty__(
-        "es_toString",
+        "toString",
         new ES_ST_PropertyDescriptor({
             __Value__ : function () {
                 return "[[object prototype es_toString function code]]";
@@ -23,7 +23,7 @@ var ES_objectPrototype = (function () {
         false
     );
     op.__DefineOwnProperty__(
-        "es_valueOf",
+        "valueOf",
         new ES_ST_PropertyDescriptor({
             __Value__ : function () {
                 return "[[object prototype es_valueOf function code]]";
@@ -32,7 +32,7 @@ var ES_objectPrototype = (function () {
         false
     );
     op.__DefineOwnProperty__(
-        "es_hasOwnProperty",
+        "hasOwnProperty",
         new ES_ST_PropertyDescriptor({
             __Value__ : function (v) {
                 return "[[object prototype es_hasOwnProperty function code]]";
@@ -45,7 +45,7 @@ var ES_objectPrototype = (function () {
         false
     );
     op.__DefineOwnProperty__(
-        "es_toLocalString",
+        "toLocalString",
         new ES_ST_PropertyDescriptor({
             __Value__ : function () {
                 return "[[object prototype toLocalString function code]]";
@@ -55,7 +55,7 @@ var ES_objectPrototype = (function () {
     );
 
     op.__DefineOwnProperty__(
-        "es_isPrototypeOf",
+        "isPrototypeOf",
         new ES_ST_PropertyDescriptor({
             __Value__ : function () {
                 return "[[object prototype es_isPrototypeOf function code]]";
@@ -64,7 +64,7 @@ var ES_objectPrototype = (function () {
         false
     );
     op.__DefineOwnProperty__(
-        "es_propertyIsEnumerable",
+        "propertyIsEnumerable",
         new ES_ST_PropertyDescriptor({
             __Value__ : function (v) {
                 return "[[object prototype es_propertyIsEnumerable function code]]";

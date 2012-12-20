@@ -133,6 +133,7 @@ var ES_PrimaryExpressions = {
                 });
             return new ES_ST_PropertyIdentifier(propName, desc);
         },
+        //get xxx() {}
         "PropertyAssignment:get PropertyName () {FunctionBody}" : function (PropertyName, FunctionBody) {
             var propName = ES_control.execute(PropertyName),
                 closure = ES_createFunctionObject("", FunctionBody, ES_control.runningEC.lexicalEnvironment, ES_Global.isStrictFunction(FunctionBody)),
@@ -143,6 +144,7 @@ var ES_PrimaryExpressions = {
                 });
             return new ES_ST_PropertyIdentifier(propName, desc);
         },
+        //set xxx() {}
         "PropertyAssignment:set PropertyName (PropertySetParameterList) {FunctionBody}" : function (PropertyName, PropertySetParameterList, FunctionBody) {
             var propName = ES_control.execute(PropertyName),
                 closure = ES_createFunctionObject(PropertySetParameterList, FunctionBody, ES_control.runningEC.lexicalEnvironment, ES_Global.isStrictFunction(FunctionBody)),

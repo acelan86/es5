@@ -1,5 +1,5 @@
 /**
- * ES最原始的对象声明
+ * ES原生对象声明
  * 依赖 ES_ST_PropertyDescriptor.js
  * @param {[type]} o [description]
  */
@@ -28,6 +28,7 @@ ES_Object.prototype = {
      * 返回命名属性的值
      * @param  {String} propertyName 属性名
      * @return {Any}                 属性值
+     * 8.12.3
      */
     __Get__ : function (propertyName) {
         var desc = this.__GetProperty__(propertyName);
@@ -41,7 +42,7 @@ ES_Object.prototype = {
             if (getter === undefined) {
                 return undefined;
             } else {
-                return getter.__Call__(this); //getter是一个functionObject, 方法定义在ES_functionConstructor.js中
+                return getter.__Call__(this); //getter是一个functionObject, 方法定义在ES_functionConstructor.js中 __Call__(thiz, args)
             }
         }
     },
@@ -49,6 +50,8 @@ ES_Object.prototype = {
      * 返回对象自身属性ownProperty的属性描述符
      * @param  {String}             propertyName 属性名
      * @return {PropertyDescriptor}              属性描述符
+     * 8.12.1
+     * 如果object是一个字符串对象，该方法被重写，定义在15.5.5.2
      */
     __GetOwnProperty__ : function (propertyName) {
         if ('undefined' === typeof this._ownProperty[propertyName]) {
@@ -57,7 +60,7 @@ ES_Object.prototype = {
         var desc = new ES_ST_PropertyDescriptor({}),
             x = this._ownProperty[propertyName];
         if (ES_ST_PropertyDescriptor.isDataDescriptor(x)) {
-            desc._t = 'data';
+            desc._t = 'data'; //附加描述，表明是一个数据属性，es无
             desc.__Value__ = x.__Value__;
             desc.__Writable__ = x.__Writable__;
         } else {
@@ -74,7 +77,8 @@ ES_Object.prototype = {
     /**
      * 返回对象完全填入的自身命名属性的属性描述符，即通过__Property__查找的属性的属性描述符
      * @param  {String}             propertyName    属性名
-     * @return {ES_ST_PropertyDescriptor}                 属性描述符
+     * @return {ES_ST_PropertyDescriptor}           属性描述符
+     * 8.12.2
      */
     __GetProperty__ : function (propertyName) {
         var desc = this.__GetOwnProperty__(propertyName);
@@ -91,8 +95,9 @@ ES_Object.prototype = {
      * 设置命名属性的值
      * @param  {String}     propertyName 属性名
      * @param  {Any}        value        属性值
-     * @param  {Boolean}    isThrow        是否抛出错误
-     * @return                  
+     * @param  {Boolean}    isThrow      是否抛出错误
+     * @return  
+     * 8.12.5              
      */
     __Put__ : function (propertyName, value, isThrow) {
         if (!this.__CanPut__(propertyName)) {
@@ -114,7 +119,7 @@ ES_Object.prototype = {
             this.__DefineOwnProperty__(propertyName, valueDesc, isThrow);
             return;
         }
-
+        //自身没有属性，或者自身属性是一个访问器属性
         var desc = this.__GetProperty__(propertyName);
         if (ES_ST_PropertyDescriptor.isAccessorDescriptor(desc)) {
             var setter = desc.__Set__;
@@ -134,6 +139,7 @@ ES_Object.prototype = {
      * 判断是否可以在某个属性上执行__Put__操作
      * @param  {String}     propertyName 属性名
      * @return {Boolean}                 是否可以put
+     * 8.12.4
      */
     __CanPut__ : function (propertyName) {
         var desc = this.__GetOwnProperty__(propertyName);
@@ -167,10 +173,10 @@ ES_Object.prototype = {
      * 判断对象是否有某个属性
      * @param  {String}     propertyName 属性名
      * @return {Boolean}                 是否具有该属性
+     * 8.12.6
      */
     __HasProperty__ : function (propertyName) {
-        var desc = this.__GetProperty__(propertyName);
-        return desc !== undefined;
+        return undefined !== this.__GetProperty__(propertyName);
     },
 
     /**
@@ -178,6 +184,7 @@ ES_Object.prototype = {
      * @param  {String} propertyName 属性名
      * @param  {[type]} isThrow        是否抛出错误
      * @return {[type]}              是否成功删除
+     * 8.12.7
      */
     __Delete__ : function (propertyName, isThrow) {
         var desc = this.__GetOwnProperty__(propertyName);
@@ -199,17 +206,18 @@ ES_Object.prototype = {
      * 返回对象的默认值
      * @param  {String}     hint    标识
      * @return {Primitive}          对象默认值
+     * 8.12.8
      */
     __DefaultValue__ : function (hint) {
         //当hint为String时
-        var toString = this.__Get__('es_toString');
+        var toString = this.__Get__('toString');
         if (ES_Global.isCallable(toString)) {
             var str = toString.__Call__(this);
             if (isPrimitive(str)) {
                 return str;
             }
         }
-        var valueOf = this.__Get__('es_valueOf');
+        var valueOf = this.__Get__('valueOf');
         if (ES_Global.isCallable(valueOf)) {
             var val = valueOf.__Call__(this);
             if (isPrimitive(val)) {
@@ -227,7 +235,8 @@ ES_Object.prototype = {
      * @param  {String}                 propertyName       属性名
      * @param  {ES_ST_PropertyDescriptor}  propertyDescriptor 属性描述符
      * @param  {Boolean}                isThrow            是否抛出错误
-     * @return {Boolean}                                   是否成功 
+     * @return {Boolean}                                   是否成功
+     * 8.12.9 
      */
     __DefineOwnProperty__ : function (propertyName, propertyDescriptor, isThrow) {
         function _denied() {
@@ -261,15 +270,17 @@ ES_Object.prototype = {
             return true;
         }
         //这里描述propertyDescriptor不存在任何字段
-        (function () {
+        var propIsEmpty = (function () {
             var i = 0;
             for (var k in propertyDescriptor) {
                 i++;
             }
-            if (i === 0) {
-                return true;
-            }
+            return i === 0;
         })();
+        if (propIsEmpty) {
+            return true;
+        }
+        
 
         if (ES_Global.sameValue(propertyDescriptor, current)) {
             return true;

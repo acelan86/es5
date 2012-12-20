@@ -7,7 +7,7 @@ var ES_functionPrototype = (function () {
 
     //命名的数据属性
     fp.__DefineOwnProperty__(
-        "es_length",
+        "length",
         new ES_ST_PropertyDescriptor({
             __Value__ : 0
         }),
@@ -16,7 +16,7 @@ var ES_functionPrototype = (function () {
 
     //以下同上定义方法
     fp.__DefineOwnProperty__(
-        "es_constructor",
+        "constructor",
         new ES_ST_PropertyDescriptor({
             __Value__ : "ES_functionCounstructor"
         }),
@@ -24,7 +24,7 @@ var ES_functionPrototype = (function () {
     );
 
     fp.__DefineOwnProperty__(
-        "es_toString",
+        "toString",
         new ES_ST_PropertyDescriptor({
             __Value__ : function () {
                 return "[[functionPrototype toString function Code]]";
@@ -33,7 +33,7 @@ var ES_functionPrototype = (function () {
         false
     );
     fp.__DefineOwnProperty__(
-        "es_apply",
+        "apply",
         new ES_ST_PropertyDescriptor({
             __Value__ : function (thisArg, argArray) {
                 return "[[function prototype apply function code]]";

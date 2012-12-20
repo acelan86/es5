@@ -1,5 +1,9 @@
 /**
- * 创建函数对象的算法13.2
+ * 创建函数对象，基础方法
+ * @param {String} formalParameterList 函数参数名列表,逗号分隔 "a,b,c,d"
+ * @param {String} functionBody        函数体
+ * @param {[type]} scope               [description]
+ * @param {[type]} strict              [description]
  */
 function ES_createFunctionObject(formalParameterList, functionBody, scope, strict) {
     formalParameterList = formalParameterList || "";
@@ -11,9 +15,6 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         __FormalParameters__ : formalParameterList,
         __Code__ : functionBody
     });
-
-    f.__Class__ = 'Function';
-    f.__Prototype__ = ES_functionPrototype;
     
     f.__Get__ = function (propertyName) {
         var v = ES_Object.prototype.__Get__.call(this, propertyName);
@@ -78,7 +79,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         }
     };
 
-
+    //定义function对象的length为参数个数
     ES_Helper._initOwnProperty(f, {
         "length" : formalParameterList.split(',').length || 0
     }, {

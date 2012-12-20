@@ -4,7 +4,7 @@
  * @param  {ES_ST_List}                 names       函数的所有形参名
  * @param  {Any}                        args        传给内部方法__Call__的实际参数
  * @param  {ES_ST_EnvironmentRecords}   envRec      变量环境的环境记录
- * @param  {Boolean}                    isStrict        是否严格模式
+ * @param  {Boolean}                    isStrict    是否严格模式
  * @return {ES_Object}                              对象
  */
 ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
@@ -16,6 +16,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
         }),
         object = ES_objectConstructor;
 
+    //设置arguments.length
     obj.__DefineOwnProperty__(
         'length',
         new ES_ST_PropertyDescriptor({
@@ -32,6 +33,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
         indx = len - 1;
     while (indx >= 0) {
         var val = args[indx];
+        //定义arguments[n]
         obj.__DefineOwnProperty__(
             ES_Global.toString(indx),
             new ES_ST_PropertyDescriptor({
@@ -59,7 +61,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
                 );
             }
         }
-        indx = indx - 1;
+        indx--;
     }
     if (mappedNames.length > 0) {
         obj.__ParameterMap__ = map;
@@ -129,6 +131,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
         };
     }
     if (isStrict === false) {
+        //定义arguments.callee
         obj.__DefineOwnProperty__(
             "callee",
             new ES_ST_PropertyDescriptor({
@@ -141,6 +144,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
         );
     } else {
         var thrower = ES_throwTypeError;
+        //定义arguments.caller arguments.callee 为抛出错误, 严格模式不允许又这两个定义
         obj.__DefineOwnProperty__(
             "caller",
             new ES_ST_PropertyDescriptor({
@@ -151,6 +155,7 @@ ES_createArgumentsObject = function (funcObj, names, args, envRec, isStrict) {
             }),
             false
         );
+        //
         obj.__DefineOwnProperty__(
             "callee",
             new ES_ST_PropertyDescriptor({

@@ -15,7 +15,7 @@ function ES_createFunctionObject(formalParameterList, functionBody, scope, stric
         __FormalParameters__ : formalParameterList,
         __Code__ : functionBody
     });
-    
+    //15.3.5.4
     f.__Get__ = function (propertyName) {
         var v = ES_Object.prototype.__Get__.call(this, propertyName);
         if (propertyName === 'caller' && ES_Global.isStrictCode(v)) {

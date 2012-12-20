@@ -14,7 +14,9 @@ var ES_createNullObject = function () {
  */
 var ES_objectConstructor = (function () {
     var o = new ES_Object({
-        __Prototype__ : ES_functionPrototype
+        __Prototype__ : ES_functionPrototype,
+        __Extensible__ : true,
+        __Class__ : 'Function',
     });
 
     o.__Call__ = function (value) {

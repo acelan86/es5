@@ -6,21 +6,21 @@ function ES_ST_PropertyDescriptor(o, _t) {
     switch (_t) {
         case 'accessor' : 
             this._t = 'accessor';
-            this.__Get__ = o.__Get__ || undefined;
-            this.__Set__ = o.__Set__ || undefined;
+            this.__Get__ = 'undefined' !== typeof o.__Get__ ? o.__Get__ : undefined;
+            this.__Set__ = 'undefined' !== typeof o.__Set__ ? o.__Set__ : undefined;
             break;
         case 'generic' : 
             this._t = 'generic';
             break;
         default : 
             this._t = 'data';
-            this.__Value__ = o.__Value__ || undefined;
-            this.__Writable__ = o.__Writable__ || false;
+            this.__Value__ = 'undefined' !== typeof o.__Value__ ? o.__Value__ : undefined;
+            this.__Writable__ = 'undefined' !== typeof o.__Writable__ ? o.__Writable__ : false;
             break;
     }
     //公共属性
-    this.__Enumerable__ = this.__Enumerable__ || false; //是否可被for-in枚举
-    this.__Configurable__ = this.__Configurable__ || false;//是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
+    this.__Enumerable__ = 'undefined' !== typeof o.__Enumerable__ ? o.__Enumerable__ : false; //是否可被for-in枚举
+    this.__Configurable__ = 'undefined' !== typeof o.__Configurable__ ? o.__Configurable__ : false;//是否可删除，是否可以改变属性性质（数据或访问器属性），是否可以改变attributes(指命名的数据属性或者命名的访问器属性是否可改？)
 }
 
 /**

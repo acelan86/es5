@@ -190,8 +190,7 @@ var ES_functionConstructor = (function () {
             throw Error(); //13.1 todo
         }
         //@todo scope哪里来的？ 
-        var scope = scope || {};
-        return new ES_createFunctionObject(p, body, scope, strict);
+        return new ES_createFunctionObject(p, body, ES_globalEC, strict);
     };
 
     return o;
